@@ -1,0 +1,13 @@
+# bkit state (local session data)
+.bkit/state/
+.bkit/runtime/
+.bkit/snapshots/
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# macOS
+.DS_Store
+
+# env files
+.env*.local
