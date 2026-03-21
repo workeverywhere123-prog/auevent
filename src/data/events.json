@@ -1,0 +1,802 @@
+[
+  {
+    "id": "evt-001",
+    "title": "Moomba Festival 2026",
+    "category": "Festival",
+    "date": "2026-03-06",
+    "time": "10:00 AM - 10:00 PM",
+    "location": {
+      "name": "Birrarung Marr",
+      "suburb": "Melbourne VIC",
+      "coordinates": { "lat": -37.8197, "lng": 144.9734 }
+    },
+    "description": "Australia's largest free community festival held annually in Melbourne.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800",
+    "tags": ["Family", "Outdoor", "Free"]
+  },
+  {
+    "id": "evt-002",
+    "title": "Vivid Sydney Light Show",
+    "category": "Arts",
+    "date": "2026-05-22",
+    "time": "06:00 PM - 11:00 PM",
+    "location": {
+      "name": "Circular Quay",
+      "suburb": "Sydney NSW",
+      "coordinates": { "lat": -33.8606, "lng": 151.2105 }
+    },
+    "description": "A spectacular display of light, music, and ideas across Sydney's iconic landmarks.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=800",
+    "tags": ["Light", "Sydney", "NightLife"]
+  },
+  {
+    "id": "evt-003",
+    "title": "Brisbane Festival Opening",
+    "category": "Music",
+    "date": "2026-09-01",
+    "time": "07:00 PM",
+    "location": {
+      "name": "South Bank Parklands",
+      "suburb": "Brisbane QLD",
+      "coordinates": { "lat": -27.4772, "lng": 153.0233 }
+    },
+    "description": "Celebrating the spirit of Brisbane with world-class performances and fireworks.",
+    "price": "$0 - $120",
+    "imageUrl": "https://images.unsplash.com/photo-1467139701929-18c0d27a7516?auto=format&fit=crop&w=800",
+    "tags": ["Art", "Fireworks", "River"]
+  },
+  {
+    "id": "evt-004",
+    "title": "Gold Coast Surfing Open",
+    "category": "Sports",
+    "date": "2026-04-15",
+    "time": "08:00 AM - 04:00 PM",
+    "location": {
+      "name": "Surfers Paradise Beach",
+      "suburb": "Gold Coast QLD",
+      "coordinates": { "lat": -28.0001, "lng": 153.4308 }
+    },
+    "description": "Watch world-class surfers compete on the iconic waves of the Gold Coast.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=800",
+    "tags": ["Surf", "Beach", "Active"]
+  },
+  {
+    "id": "evt-005",
+    "title": "Perth Fringe World",
+    "category": "Arts",
+    "date": "2026-01-20",
+    "time": "Various Times",
+    "location": {
+      "name": "The Pleasure Garden",
+      "suburb": "Perth WA",
+      "coordinates": { "lat": -31.9505, "lng": 115.8605 }
+    },
+    "description": "An annual multi-arts fringe festival held in Perth during the summer.",
+    "price": "$15 - $60",
+    "imageUrl": "https://images.unsplash.com/photo-1514525253361-bee8a187499b?auto=format&fit=crop&w=800",
+    "tags": ["Comedy", "Theater", "Perth"]
+  },
+  {
+    "id": "evt-006",
+    "title": "Melbourne International Coffee Expo",
+    "category": "Food & Drink",
+    "date": "2026-05-12",
+    "time": "09:00 AM - 05:00 PM",
+    "location": {
+      "name": "MCEC",
+      "suburb": "South Wharf VIC",
+      "coordinates": { "lat": -37.8253, "lng": 144.9525 }
+    },
+    "description": "The largest coffee event in the Asia-Pacific region for enthusiasts and professionals.",
+    "price": "$45",
+    "imageUrl": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800",
+    "tags": ["Coffee", "Cafe", "Trade"]
+  },
+  {
+    "id": "evt-007",
+    "title": "Sydney Startup Week",
+    "category": "Tech",
+    "date": "2026-10-10",
+    "time": "10:00 AM - 06:00 PM",
+    "location": {
+      "name": "Sydney Startup Hub",
+      "suburb": "Sydney NSW",
+      "coordinates": { "lat": -33.8642, "lng": 151.2052 }
+    },
+    "description": "A week-long series of events connecting Sydney's startup ecosystem.",
+    "price": "Various",
+    "imageUrl": "https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&w=800",
+    "tags": ["Business", "Networking", "Tech"]
+  },
+  {
+    "id": "evt-008",
+    "title": "Great Barrier Reef Tech Conf",
+    "category": "Tech",
+    "date": "2026-07-05",
+    "time": "09:00 AM",
+    "location": {
+      "name": "Brisbane Convention Centre",
+      "suburb": "South Brisbane QLD",
+      "coordinates": { "lat": -27.4764, "lng": 153.0182 }
+    },
+    "description": "Discussing the future of ocean conservation technology in Queensland.",
+    "price": "$250",
+    "imageUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800",
+    "tags": ["AI", "Ocean", "Conference"]
+  },
+  {
+    "id": "evt-009",
+    "title": "Gold Coast Marathon",
+    "category": "Sports",
+    "date": "2026-07-04",
+    "time": "06:00 AM",
+    "location": {
+      "name": "Broadwater Parklands",
+      "suburb": "Southport QLD",
+      "coordinates": { "lat": -27.9678, "lng": 153.4158 }
+    },
+    "description": "Australia's premier road race on the flat and fast Gold Coast course.",
+    "price": "$180",
+    "imageUrl": "https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?auto=format&fit=crop&w=800",
+    "tags": ["Running", "Fitness", "GoldCoast"]
+  },
+  {
+    "id": "evt-010",
+    "title": "Perth International Jazz Fest",
+    "category": "Music",
+    "date": "2026-11-05",
+    "time": "02:00 PM - 11:00 PM",
+    "location": {
+      "name": "State Theatre Centre",
+      "suburb": "Perth WA",
+      "coordinates": { "lat": -31.9491, "lng": 115.8617 }
+    },
+    "description": "Celebrating jazz with local and international artists across Perth.",
+    "price": "$40",
+    "imageUrl": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=800",
+    "tags": ["Jazz", "Concert", "NightLife"]
+  },
+  {
+    "id": "evt-011",
+    "title": "Melbourne Fashion Week",
+    "category": "Arts",
+    "date": "2026-10-18",
+    "time": "Various",
+    "location": {
+      "name": "Town Hall",
+      "suburb": "Melbourne VIC",
+      "coordinates": { "lat": -37.8149, "lng": 144.9665 }
+    },
+    "description": "A week of runways, pop-up events, and talks highlighting Australian design.",
+    "price": "$0 - $150",
+    "imageUrl": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800",
+    "tags": ["Fashion", "Design", "Melbourne"]
+  },
+  {
+    "id": "evt-012",
+    "title": "Opera House Rooftop Party",
+    "category": "Music",
+    "date": "2026-12-31",
+    "time": "08:00 PM",
+    "location": {
+      "name": "Sydney Opera House",
+      "suburb": "Sydney NSW",
+      "coordinates": { "lat": -33.8568, "lng": 151.2153 }
+    },
+    "description": "The most exclusive New Year's Eve party with a view of the harbor bridge.",
+    "price": "$600",
+    "imageUrl": "https://images.unsplash.com/photo-1523301343968-6a6ebf63c672?auto=format&fit=crop&w=800",
+    "tags": ["NYE", "Party", "Luxury"]
+  },
+  {
+    "id": "evt-013",
+    "title": "Brisbane BBQ Festival",
+    "category": "Food & Drink",
+    "date": "2026-06-20",
+    "time": "12:00 PM - 09:00 PM",
+    "location": {
+      "name": "Brisbane Showgrounds",
+      "suburb": "Bowen Hills QLD",
+      "coordinates": { "lat": -27.4516, "lng": 153.0336 }
+    },
+    "description": "Bringing together the best pitmasters and BBQ lovers in Queensland.",
+    "price": "$20",
+    "imageUrl": "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=800",
+    "tags": ["BBQ", "Meat", "Festival"]
+  },
+  {
+    "id": "evt-014",
+    "title": "AFL Grand Final 2026",
+    "category": "Sports",
+    "date": "2026-09-26",
+    "time": "02:30 PM",
+    "location": {
+      "name": "MCG",
+      "suburb": "East Melbourne VIC",
+      "coordinates": { "lat": -37.8199, "lng": 144.9834 }
+    },
+    "description": "The ultimate championship match of Australian Rules Football.",
+    "price": "$150 - $450",
+    "imageUrl": "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=800",
+    "tags": ["AFL", "Footy", "Melbourne"]
+  },
+  {
+    "id": "evt-015",
+    "title": "Bondi Beach Sculptures",
+    "category": "Arts",
+    "date": "2026-11-12",
+    "time": "All Day",
+    "location": {
+      "name": "Bondi Coastal Walk",
+      "suburb": "Bondi NSW",
+      "coordinates": { "lat": -33.8915, "lng": 151.2767 }
+    },
+    "description": "Large-scale art installations along the scenic Bondi to Tamarama walk.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1493397212122-2b85def82820?auto=format&fit=crop&w=800",
+    "tags": ["Sculpture", "Beach", "Scenic"]
+  },
+  {
+    "id": "evt-016",
+    "title": "Kings Park Wildflower Fest",
+    "category": "Festival",
+    "date": "2026-09-15",
+    "time": "09:00 AM - 05:00 PM",
+    "location": {
+      "name": "Kings Park",
+      "suburb": "Perth WA",
+      "coordinates": { "lat": -31.9611, "lng": 115.8415 }
+    },
+    "description": "Witness the spectacular blooming of Western Australian wildflowers.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=800",
+    "tags": ["Nature", "Flowers", "Perth"]
+  },
+  {
+    "id": "evt-017",
+    "title": "Gold Coast Film Festival",
+    "category": "Arts",
+    "date": "2026-04-10",
+    "time": "Various",
+    "location": {
+      "name": "HOTA",
+      "suburb": "Surfers Paradise QLD",
+      "coordinates": { "lat": -28.0016, "lng": 153.4182 }
+    },
+    "description": "Celebrating local and international cinema on the Gold Coast.",
+    "price": "$18",
+    "imageUrl": "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800",
+    "tags": ["Movies", "Cinema", "HOTA"]
+  },
+  {
+    "id": "evt-018",
+    "title": "Melbourne Tech Expo 2026",
+    "category": "Tech",
+    "date": "2026-08-14",
+    "time": "10:00 AM - 05:00 PM",
+    "location": {
+      "name": "Melbourne Convention Centre",
+      "suburb": "Southbank VIC",
+      "coordinates": { "lat": -37.8253, "lng": 144.9525 }
+    },
+    "description": "Explore the latest innovations in AI, robotics, and future gadgets.",
+    "price": "$25",
+    "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800",
+    "tags": ["Robotics", "Future", "Expo"]
+  },
+  {
+    "id": "evt-019",
+    "title": "Perth Optus Stadium Tour",
+    "category": "Sports",
+    "date": "2026-02-15",
+    "time": "11:00 AM",
+    "location": {
+      "name": "Optus Stadium",
+      "suburb": "Burswood WA",
+      "coordinates": { "lat": -31.9511, "lng": 115.8892 }
+    },
+    "description": "Go behind the scenes of Australia's most modern stadium.",
+    "price": "$30",
+    "imageUrl": "https://images.unsplash.com/photo-1522770179533-24471fcdba45?auto=format&fit=crop&w=800",
+    "tags": ["Tour", "Stadium", "StadiumView"]
+  },
+  {
+    "id": "evt-020",
+    "title": "Sydney Seafood Cooking Class",
+    "category": "Food & Drink",
+    "date": "2026-03-05",
+    "time": "11:00 AM - 02:00 PM",
+    "location": {
+      "name": "Sydney Fish Market",
+      "suburb": "Pyrmont NSW",
+      "coordinates": { "lat": -33.8727, "lng": 151.1923 }
+    },
+    "description": "Learn to cook fresh Australian seafood with local chefs.",
+    "price": "$165",
+    "imageUrl": "https://images.unsplash.com/photo-1534080564672-6d77c27c49a2?auto=format&fit=crop&w=800",
+    "tags": ["Cooking", "Seafood", "Sydney"]
+  },
+  {
+    "id": "evt-021",
+    "title": "Brisbane Comic-Con",
+    "category": "Festival",
+    "date": "2026-11-08",
+    "time": "09:00 AM - 06:00 PM",
+    "location": {
+      "name": "BCEC",
+      "suburb": "South Brisbane QLD",
+      "coordinates": { "lat": -27.4764, "lng": 153.0182 }
+    },
+    "description": "A celebration of pop culture, gaming, and geek lifestyle in Brisbane.",
+    "price": "$45",
+    "imageUrl": "https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?auto=format&fit=crop&w=800",
+    "tags": ["Comic", "Gaming", "Cosplay"]
+  },
+  {
+    "id": "evt-022",
+    "title": "Melbourne Night Noodle Market",
+    "category": "Food & Drink",
+    "date": "2026-11-20",
+    "time": "05:00 PM - 10:00 PM",
+    "location": {
+      "name": "Alexandra Gardens",
+      "suburb": "Melbourne VIC",
+      "coordinates": { "lat": -37.8209, "lng": 144.9702 }
+    },
+    "description": "Taste your way through Asia at this vibrant open-air market.",
+    "price": "Free Entry",
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800",
+    "tags": ["Noodles", "NightMarket", "AsianFood"]
+  },
+  {
+    "id": "evt-023",
+    "title": "Gold Coast Car Show",
+    "category": "Festival",
+    "date": "2026-08-30",
+    "time": "09:00 AM - 03:00 PM",
+    "location": {
+      "name": "Mudgeeraba Showgrounds",
+      "suburb": "Mudgeeraba QLD",
+      "coordinates": { "lat": -28.0772, "lng": 153.3592 }
+    },
+    "description": "A day for car enthusiasts featuring classic, custom, and muscle cars.",
+    "price": "$15",
+    "imageUrl": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800",
+    "tags": ["Cars", "Classic", "Expo"]
+  },
+  {
+    "id": "evt-024",
+    "title": "Sydney Symphony in the Park",
+    "category": "Music",
+    "date": "2026-01-15",
+    "time": "08:00 PM",
+    "location": {
+      "name": "Domain",
+      "suburb": "Sydney NSW",
+      "coordinates": { "lat": -33.8688, "lng": 151.2162 }
+    },
+    "description": "Enjoy a magical evening of classical music under the stars.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1514320291944-80aa2f76b9d3?auto=format&fit=crop&w=800",
+    "tags": ["Classical", "Orchestra", "Free"]
+  },
+  {
+    "id": "evt-025",
+    "title": "Perth Beach Volleyball Tour",
+    "category": "Sports",
+    "date": "2026-03-12",
+    "time": "08:00 AM - 05:00 PM",
+    "location": {
+      "name": "Scarborough Beach",
+      "suburb": "Scarborough WA",
+      "coordinates": { "lat": -31.8942, "lng": 115.7562 }
+    },
+    "description": "The national beach volleyball tour hits the white sands of Scarborough.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&w=800",
+    "tags": ["Volleyball", "Sport", "Beach"]
+  },
+  {
+    "id": "evt-026",
+    "title": "Melbourne Book Fair",
+    "category": "Arts",
+    "date": "2026-06-05",
+    "time": "10:00 AM - 04:00 PM",
+    "location": {
+      "name": "State Library Victoria",
+      "suburb": "Melbourne VIC",
+      "coordinates": { "lat": -37.8105, "lng": 144.9645 }
+    },
+    "description": "Browse thousands of rare, second-hand, and local books.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800",
+    "tags": ["Books", "Culture", "Melbourne"]
+  },
+  {
+    "id": "evt-027",
+    "title": "Sydney Modern Art Exhibition",
+    "category": "Arts",
+    "date": "2026-04-20",
+    "time": "10:00 AM - 05:00 PM",
+    "location": {
+      "name": "MCA Sydney",
+      "suburb": "The Rocks NSW",
+      "coordinates": { "lat": -33.8596, "lng": 151.2087 }
+    },
+    "description": "Exploring contemporary Australian identities through mixed media.",
+    "price": "$22",
+    "imageUrl": "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=800",
+    "tags": ["Gallery", "Art", "Sydney"]
+  },
+  {
+    "id": "evt-028",
+    "title": "Brisbane Botanical Tour",
+    "category": "Festival",
+    "date": "2026-05-30",
+    "time": "10:30 AM",
+    "location": {
+      "name": "City Botanic Gardens",
+      "suburb": "Brisbane QLD",
+      "coordinates": { "lat": -27.4742, "lng": 153.0292 }
+    },
+    "description": "Guided walking tour highlighting the rare tropical plants of Brisbane.",
+    "price": "$10",
+    "imageUrl": "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=800",
+    "tags": ["Garden", "Nature", "Walk"]
+  },
+  {
+    "id": "evt-029",
+    "title": "Gold Coast Sky-high Yoga",
+    "category": "Sports",
+    "date": "2026-09-12",
+    "time": "06:30 AM",
+    "location": {
+      "name": "Skypoint Observation Deck",
+      "suburb": "Surfers Paradise QLD",
+      "coordinates": { "lat": -28.0051, "lng": 153.4292 }
+    },
+    "description": "Start your day with yoga 77 levels above the beach.",
+    "price": "$35",
+    "imageUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800",
+    "tags": ["Yoga", "Wellness", "GoldCoast"]
+  },
+  {
+    "id": "evt-030",
+    "title": "Perth Zoo Lantern Festival",
+    "category": "Festival",
+    "date": "2026-08-15",
+    "time": "06:00 PM - 09:00 PM",
+    "location": {
+      "name": "Perth Zoo",
+      "suburb": "South Perth WA",
+      "coordinates": { "lat": -31.9751, "lng": 115.8542 }
+    },
+    "description": "Gigantic animal-themed lanterns light up the zoo at night.",
+    "price": "$32",
+    "imageUrl": "https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800",
+    "tags": ["Zoo", "Family", "NightLife"]
+  },
+  {
+    "id": "evt-031",
+    "title": "Melbourne Indie Games Fest",
+    "category": "Tech",
+    "date": "2026-10-05",
+    "time": "10:00 AM - 08:00 PM",
+    "location": {
+      "name": "ACMI",
+      "suburb": "Federation Square VIC",
+      "coordinates": { "lat": -37.8176, "lng": 144.9682 }
+    },
+    "description": "Play the best new games from Australia's independent developers.",
+    "price": "$15",
+    "imageUrl": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800",
+    "tags": ["Games", "Indie", "Melbourne"]
+  },
+  {
+    "id": "evt-032",
+    "title": "Sydney Craft Beer Week",
+    "category": "Food & Drink",
+    "date": "2026-10-22",
+    "time": "Various",
+    "location": {
+      "name": "Various Breweries",
+      "suburb": "Sydney NSW",
+      "coordinates": { "lat": -33.8688, "lng": 151.2093 }
+    },
+    "description": "Celebrating the best local and international craft brews in Sydney.",
+    "price": "Free Entry",
+    "imageUrl": "https://images.unsplash.com/photo-1535958636474-b021ee887b13?auto=format&fit=crop&w=800",
+    "tags": ["Beer", "Pub", "Sydney"]
+  },
+  {
+    "id": "evt-033",
+    "title": "Brisbane Science Week",
+    "category": "Tech",
+    "date": "2026-08-10",
+    "time": "09:00 AM - 04:00 PM",
+    "location": {
+      "name": "Queensland Museum",
+      "suburb": "South Brisbane QLD",
+      "coordinates": { "lat": -27.4754, "lng": 153.0175 }
+    },
+    "description": "Hands-on science experiments and talks for curious minds.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800",
+    "tags": ["Science", "Education", "Free"]
+  },
+  {
+    "id": "evt-034",
+    "title": "Gold Coast Theme Park Night",
+    "category": "Festival",
+    "date": "2026-10-31",
+    "time": "06:00 PM - Midnight",
+    "location": {
+      "name": "Movie World",
+      "suburb": "Oxenford QLD",
+      "coordinates": { "lat": -27.9178, "lng": 153.3136 }
+    },
+    "description": "Spooky Halloween-themed night rides and entertainment.",
+    "price": "$89",
+    "imageUrl": "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=800",
+    "tags": ["Halloween", "ThemePark", "GoldCoast"]
+  },
+  {
+    "id": "evt-035",
+    "title": "Perth Optus Stadium AFL Game",
+    "category": "Sports",
+    "date": "2026-04-18",
+    "time": "05:30 PM",
+    "location": {
+      "name": "Optus Stadium",
+      "suburb": "Burswood WA",
+      "coordinates": { "lat": -31.9511, "lng": 115.8892 }
+    },
+    "description": "West Coast Eagles take on the Collingwood Magpies in a thriller.",
+    "price": "$45 - $120",
+    "imageUrl": "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=800",
+    "tags": ["AFL", "Sport", "Perth"]
+  },
+  {
+    "id": "evt-036",
+    "title": "Melbourne Christmas Market",
+    "category": "Festival",
+    "date": "2026-12-15",
+    "time": "10:00 AM - 08:00 PM",
+    "location": {
+      "name": "Federation Square",
+      "suburb": "Melbourne VIC",
+      "coordinates": { "lat": -37.8176, "lng": 144.9682 }
+    },
+    "description": "European-style Christmas stalls with Australian local goods.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1511268011861-691ed210aae8?auto=format&fit=crop&w=800",
+    "tags": ["Christmas", "Market", "Free"]
+  },
+  {
+    "id": "evt-037",
+    "title": "Sydney New Year's Day Brunch",
+    "category": "Food & Drink",
+    "date": "2027-01-01",
+    "time": "11:00 AM - 03:00 PM",
+    "location": {
+      "name": "Barangaroo Waterfront",
+      "suburb": "Sydney NSW",
+      "coordinates": { "lat": -33.8619, "lng": 151.2005 }
+    },
+    "description": "The perfect recovery brunch with views of Sydney harbor.",
+    "price": "$75",
+    "imageUrl": "https://images.unsplash.com/photo-1496048977749-6c44d362880c?auto=format&fit=crop&w=800",
+    "tags": ["Brunch", "Sydney", "NewYear"]
+  },
+  {
+    "id": "evt-038",
+    "title": "Brisbane Jazz Boat Cruise",
+    "category": "Music",
+    "date": "2026-05-14",
+    "time": "06:30 PM",
+    "location": {
+      "name": "Eagle Street Pier",
+      "suburb": "Brisbane QLD",
+      "coordinates": { "lat": -27.4682, "lng": 153.0312 }
+    },
+    "description": "Smooth jazz performance on a cruise along the Brisbane River.",
+    "price": "$55",
+    "imageUrl": "https://images.unsplash.com/photo-1544427928-1449da34fe0d?auto=format&fit=crop&w=800",
+    "tags": ["Jazz", "Cruise", "Music"]
+  },
+  {
+    "id": "evt-039",
+    "title": "Gold Coast Yoga Festival",
+    "category": "Sports",
+    "date": "2026-11-01",
+    "time": "07:00 AM - 05:00 PM",
+    "location": {
+      "name": "Broadbeach Park",
+      "suburb": "Broadbeach QLD",
+      "coordinates": { "lat": -28.0272, "lng": 153.4342 }
+    },
+    "description": "A day dedicated to yoga, meditation, and healthy living.",
+    "price": "$20",
+    "imageUrl": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800",
+    "tags": ["Yoga", "Zen", "Fitness"]
+  },
+  {
+    "id": "evt-040",
+    "title": "Perth Tech Startup Pitch",
+    "category": "Tech",
+    "date": "2026-09-22",
+    "time": "06:00 PM",
+    "location": {
+      "name": "Spacecubed",
+      "suburb": "Perth WA",
+      "coordinates": { "lat": -31.9542, "lng": 115.8592 }
+    },
+    "description": "Watch WA's brightest startups pitch their ideas to investors.",
+    "price": "$10",
+    "imageUrl": "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800",
+    "tags": ["Startup", "Pitch", "Networking"]
+  },
+  {
+    "id": "evt-041",
+    "title": "Melbourne Street Art Tour",
+    "category": "Arts",
+    "date": "2026-04-12",
+    "time": "11:00 AM",
+    "location": {
+      "name": "Hosier Lane",
+      "suburb": "Melbourne VIC",
+      "coordinates": { "lat": -37.8163, "lng": 144.9692 }
+    },
+    "description": "Explore the famous graffiti and laneway art of Melbourne.",
+    "price": "$35",
+    "imageUrl": "https://images.unsplash.com/photo-1494232410401-ad00d5433cfa?auto=format&fit=crop&w=800",
+    "tags": ["Graffiti", "Art", "Walk"]
+  },
+  {
+    "id": "evt-042",
+    "title": "Sydney Comedy Festival",
+    "category": "Arts",
+    "date": "2026-04-25",
+    "time": "07:30 PM",
+    "location": {
+      "name": "Enmore Theatre",
+      "suburb": "Newtown NSW",
+      "coordinates": { "lat": -33.8992, "lng": 151.1762 }
+    },
+    "description": "The funniest month of the year with local and international comedians.",
+    "price": "$30 - $80",
+    "imageUrl": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800",
+    "tags": ["Comedy", "Fun", "Sydney"]
+  },
+  {
+    "id": "evt-043",
+    "title": "Brisbane Riverfire 2026",
+    "category": "Festival",
+    "date": "2026-09-26",
+    "time": "07:00 PM",
+    "location": {
+      "name": "Kangaroo Point Cliffs",
+      "suburb": "Kangaroo Point QLD",
+      "coordinates": { "lat": -27.4819, "lng": 153.0336 }
+    },
+    "description": "A breathtaking fireworks display concluding the Brisbane Festival.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?auto=format&fit=crop&w=800",
+    "tags": ["Fireworks", "Free", "Riverfire"]
+  },
+  {
+    "id": "evt-044",
+    "title": "Gold Coast Triathlon",
+    "category": "Sports",
+    "date": "2026-04-05",
+    "time": "06:30 AM",
+    "location": {
+      "name": "Broadwater Parklands",
+      "suburb": "Southport QLD",
+      "coordinates": { "lat": -27.9678, "lng": 153.4158 }
+    },
+    "description": "A high-energy race involving swimming, cycling, and running.",
+    "price": "$120",
+    "imageUrl": "https://images.unsplash.com/photo-1530549387634-e797eaaa5621?auto=format&fit=crop&w=800",
+    "tags": ["Triathlon", "Active", "Race"]
+  },
+  {
+    "id": "evt-045",
+    "title": "Perth Pride Parade",
+    "category": "Festival",
+    "date": "2026-11-28",
+    "time": "08:00 PM",
+    "location": {
+      "name": "Northbridge Streets",
+      "suburb": "Northbridge WA",
+      "coordinates": { "lat": -31.9472, "lng": 115.8592 }
+    },
+    "description": "Celebrating diversity and inclusion with a vibrant street parade.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1541534401786-2077e875e054?auto=format&fit=crop&w=800",
+    "tags": ["Pride", "Diversity", "Perth"]
+  },
+  {
+    "id": "evt-046",
+    "title": "Melbourne Gin Festival",
+    "category": "Food & Drink",
+    "date": "2026-07-10",
+    "time": "12:00 PM - 09:00 PM",
+    "location": {
+      "name": "The Timber Yard",
+      "suburb": "Port Melbourne VIC",
+      "coordinates": { "lat": -37.8342, "lng": 144.9292 }
+    },
+    "description": "Discover premium Australian gin distilleries and unique tastings.",
+    "price": "$50",
+    "imageUrl": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=800",
+    "tags": ["Gin", "Drinks", "Tasting"]
+  },
+  {
+    "id": "evt-047",
+    "title": "Sydney Whale Watching Tour",
+    "category": "Festival",
+    "date": "2026-06-15",
+    "time": "10:00 AM",
+    "location": {
+      "name": "Darling Harbour",
+      "suburb": "Sydney NSW",
+      "coordinates": { "lat": -33.8749, "lng": 151.2009 }
+    },
+    "description": "Witness the majestic whale migration along the Sydney coast.",
+    "price": "$95",
+    "imageUrl": "https://images.unsplash.com/photo-1568430462989-44163eb1752f?auto=format&fit=crop&w=800",
+    "tags": ["Wildlife", "Whales", "Ocean"]
+  },
+  {
+    "id": "evt-048",
+    "title": "Brisbane Writers Festival",
+    "category": "Arts",
+    "date": "2026-05-08",
+    "time": "Various",
+    "location": {
+      "name": "State Library QLD",
+      "suburb": "South Brisbane QLD",
+      "coordinates": { "lat": -27.4716, "lng": 153.0182 }
+    },
+    "description": "Connecting writers and readers through deep conversations.",
+    "price": "$15 - $30",
+    "imageUrl": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800",
+    "tags": ["Writing", "Books", "Authors"]
+  },
+  {
+    "id": "evt-049",
+    "title": "Gold Coast Beach Yoga",
+    "category": "Sports",
+    "date": "2026-02-14",
+    "time": "06:00 AM",
+    "location": {
+      "name": "Burleigh Heads Beach",
+      "suburb": "Burleigh Heads QLD",
+      "coordinates": { "lat": -28.0892, "lng": 153.4542 }
+    },
+    "description": "Celebrate Valentine's Day with a sunrise yoga session on the beach.",
+    "price": "Free",
+    "imageUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800",
+    "tags": ["Yoga", "Sunrise", "Free"]
+  },
+  {
+    "id": "evt-050",
+    "title": "Perth International Arts Fest",
+    "category": "Arts",
+    "date": "2026-02-10",
+    "time": "All Day",
+    "location": {
+      "name": "Various Venues",
+      "suburb": "Perth WA",
+      "coordinates": { "lat": -31.9505, "lng": 115.8605 }
+    },
+    "description": "The longest-running international arts festival in Australia.",
+    "price": "Various",
+    "imageUrl": "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800",
+    "tags": ["Culture", "Festival", "Perth"]
+  }
+]
