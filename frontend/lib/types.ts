@@ -38,6 +38,7 @@ export type Event = {
   featured: boolean;
   image?: string;
   ticketUrl?: string;
+  website?: string;
 };
 
 export type FilterState = {

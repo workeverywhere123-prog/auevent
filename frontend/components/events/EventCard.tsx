@@ -1,6 +1,6 @@
 import type { Event } from "@/lib/types";
 import CategoryBadge from "./CategoryBadge";
-import { MapPin, Clock, Ticket } from "lucide-react";
+import { MapPin, Clock, Ticket, ExternalLink } from "lucide-react";
 
 type Props = {
   event: Event;
@@ -105,14 +105,28 @@ export default function EventCard({ event, compact = false }: Props) {
           </div>
         </div>
 
-        {event.featured && (
-          <div
-            className="mt-3 text-xs font-medium px-2 py-1 rounded-full inline-block"
-            style={{ color: "#FF9F43", backgroundColor: "#FFF4E6" }}
-          >
-            ★ Featured
-          </div>
-        )}
+        <div className="mt-3 flex items-center justify-between gap-2">
+          {event.featured && (
+            <div
+              className="text-xs font-medium px-2 py-1 rounded-full inline-block"
+              style={{ color: "#FF9F43", backgroundColor: "#FFF4E6" }}
+            >
+              ★ Featured
+            </div>
+          )}
+          {event.website && (
+            <a
+              href={event.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ml-auto transition-opacity hover:opacity-80"
+              style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}
+            >
+              <ExternalLink size={11} />
+              공식 홈페이지
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );
