@@ -79,7 +79,7 @@ export default function Sidebar() {
               <Icon
                 size={18}
                 strokeWidth={active ? 2.5 : 1.8}
-                style={{ color: active ? "var(--primary)" : "var(--text-muted)", shrink: 0 }}
+                style={{ color: active ? "var(--primary)" : "var(--text-muted)" }}
                 className="shrink-0"
               />
               {!collapsed && (
