@@ -11,10 +11,11 @@ type Props = {
 export default async function EventsPage({ searchParams }: Props) {
   const { category = "all" } = await searchParams;
 
-  const filtered =
+  const filtered = (
     category === "all"
       ? MOCK_EVENTS
-      : MOCK_EVENTS.filter((e) => e.category === category);
+      : MOCK_EVENTS.filter((e) => e.category === category)
+  ).slice().sort((a, b) => a.date.localeCompare(b.date));
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
