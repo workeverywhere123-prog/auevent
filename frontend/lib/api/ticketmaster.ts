@@ -100,8 +100,10 @@ export async function fetchTicketmasterEvents(params?: {
   url.searchParams.set("countryCode", "AU");
   url.searchParams.set("size", String(params?.size ?? 200)); // max 200
   url.searchParams.set("sort", "date,asc");
-  // Only show events from today onwards
-  url.searchParams.set("startDateTime", new Date().toISOString().split(".")[0] + "Z");
+  // Use today's midnight UTC so the cache key is stable for the whole day
+  const todayMidnight = new Date();
+  todayMidnight.setUTCHours(0, 0, 0, 0);
+  url.searchParams.set("startDateTime", todayMidnight.toISOString().replace(".000Z", "Z"));
 
   if (params?.category && params.category !== "all") {
     const segmentId = SEGMENT_IDS[params.category as EventCategory];
