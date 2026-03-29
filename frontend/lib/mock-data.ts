@@ -744,14 +744,14 @@ export const CATEGORY_META: Record<
   string,
   { label: string; color: string; bg: string }
 > = {
-  music:    { label: "Music",    color: "#FF6B6B", bg: "#FFF0EF" },
-  food:     { label: "Food",     color: "#FF9F43", bg: "#FFF4E6" },
-  sports:   { label: "Sports",   color: "#4ECDC4", bg: "#E8FAF9" },
-  arts:     { label: "Arts",     color: "#A29BFE", bg: "#F3F1FF" },
-  cultural: { label: "Cultural", color: "#FDCB6E", bg: "#FFFBE6" },
-  markets:  { label: "Markets",  color: "#55EFC4", bg: "#E8FBF5" },
-  comedy:   { label: "Comedy",   color: "#FD79A8", bg: "#FFF0F5" },
-  film:     { label: "Film",     color: "#636E72", bg: "#F0F1F2" },
+  music:    { label: "Music",    color: "#E84040", bg: "#FDE8E8" },
+  food:     { label: "Food",     color: "#FF7F00", bg: "#FFF3E0" },
+  sports:   { label: "Sports",   color: "#00B894", bg: "#E0F8F3" },
+  arts:     { label: "Arts",     color: "#E07A5F", bg: "#FCF0ED" },
+  cultural: { label: "Cultural", color: "#F9CA24", bg: "#FFFDE0" },
+  markets:  { label: "Markets",  color: "#0984E3", bg: "#E0F0FD" },
+  comedy:   { label: "Comedy",   color: "#E91E8C", bg: "#FCE4F3" },
+  film:     { label: "Film",     color: "#2D3436", bg: "#EAECEC" },
   all:      { label: "All",      color: "#8898AA", bg: "#F4F6F8" },
 };
 

@@ -8,7 +8,6 @@ import {
   CalendarDays,
   MapPin,
   Tags,
-  Music,
   Star,
   Info,
   ChevronLeft,
@@ -17,10 +16,9 @@ import {
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/events", label: "All Events", icon: CalendarDays },
+  { href: "/calendar", label: "Calendar", icon: CalendarDays },
+  { href: "/events", label: "Categories", icon: Tags },
   { href: "/map", label: "Event Map", icon: MapPin },
-  { href: "/categories", label: "Categories", icon: Tags },
-  { href: "/music", label: "Music & Festivals", icon: Music },
   { href: "/featured", label: "Featured", icon: Star },
   { href: "/about", label: "About", icon: Info },
 ];
