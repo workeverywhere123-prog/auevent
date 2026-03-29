@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight, MapPin, Clock, Ticket, ExternalLink, X } from "lucide-react";
 import { CATEGORY_META } from "@/lib/mock-data";
 import type { Event } from "@/lib/types";
@@ -142,13 +142,34 @@ function DayEventCard({ event }: { event: Event }) {
 
 // ─── Main Client Component ────────────────────────────────────────────────────
 
-export default function CalendarClient({ events }: { events: Event[] }) {
+export default function CalendarClient({ events: initialEvents }: { events: Event[] }) {
   const today = new Date();
   const [year, setYear]         = useState(today.getFullYear());
   const [month, setMonth]       = useState(today.getMonth());
   const [state, setState]       = useState("all");
   const [selected, setSelected] = useState<Date | null>(null);
+  const [events, setEvents]     = useState<Event[]>(initialEvents);
+  const [loading, setLoading]   = useState(false);
   const dayPanelRef = useRef<HTMLDivElement>(null);
+
+  const fetchMonth = useCallback(async (y: number, m: number, s: string) => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        year:  String(y),
+        month: String(m),
+        state: s,
+      });
+      const res = await fetch(`/api/events?${params}`);
+      if (res.ok) setEvents(await res.json());
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchMonth(year, month, state);
+  }, [year, month, state, fetchMonth]);
 
   const cells = buildCalendarDays(year, month);
 
@@ -182,7 +203,7 @@ export default function CalendarClient({ events }: { events: Event[] }) {
       <div className="mb-5">
         <h1 className="text-2xl font-bold" style={{ color: "var(--text)" }}>Calendar</h1>
         <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
-          {monthEventCount} events · {MONTHS[month]} {year}
+          {loading ? "Loading…" : `${monthEventCount} events · ${MONTHS[month]} ${year}`}
         </p>
       </div>
 
