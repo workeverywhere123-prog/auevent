@@ -8,40 +8,40 @@ import type { Event } from "@/lib/types";
 
 const CATEGORY_COLORS: Record<string, string> = {
   music:    "#E84040",
-  food:     "#FF7F00",
-  sports:   "#00B894",
-  arts:     "#E07A5F",
-  cultural: "#F9CA24",
-  markets:  "#0984E3",
-  comedy:   "#E91E8C",
-  film:     "#2D3436",
+  food:     "#F97316",
+  sports:   "#22C55E",
+  arts:     "#8B5CF6",
+  cultural: "#EAB308",
+  markets:  "#3B82F6",
+  comedy:   "#06B6D4",
+  film:     "#64748B",
 };
 
 const CATEGORY_META: Record<string, { label: string; color: string; bg: string }> = {
   all:      { label: "전체",     color: "#8898AA", bg: "#F4F6F8" },
   music:    { label: "Music",    color: "#E84040", bg: "#FDE8E8" },
-  food:     { label: "Food",     color: "#FF7F00", bg: "#FFF3E0" },
-  sports:   { label: "Sports",   color: "#00B894", bg: "#E0F8F3" },
-  arts:     { label: "Arts",     color: "#E07A5F", bg: "#FCF0ED" },
-  cultural: { label: "Cultural", color: "#F9CA24", bg: "#FFFDE0" },
-  markets:  { label: "Markets",  color: "#0984E3", bg: "#E0F0FD" },
-  comedy:   { label: "Comedy",   color: "#E91E8C", bg: "#FCE4F3" },
-  film:     { label: "Film",     color: "#2D3436", bg: "#EAECEC" },
+  food:     { label: "Food",     color: "#F97316", bg: "#FFF0E6" },
+  sports:   { label: "Sports",   color: "#22C55E", bg: "#DCFCE7" },
+  arts:     { label: "Arts",     color: "#8B5CF6", bg: "#F3E8FF" },
+  cultural: { label: "Cultural", color: "#EAB308", bg: "#FEF9C3" },
+  markets:  { label: "Markets",  color: "#3B82F6", bg: "#DBEAFE" },
+  comedy:   { label: "Comedy",   color: "#06B6D4", bg: "#CFFAFE" },
+  film:     { label: "Film",     color: "#64748B", bg: "#F1F5F9" },
 };
 
 const STATE_META: Record<string, {
   label: string; fullName: string; color: string;
   center: [number, number]; zoom: number;
 }> = {
-  all: { label: "전체", fullName: "All States",         color: "#8898AA", center: [-25.2744, 133.7751], zoom: 4  },
-  NSW: { label: "NSW",  fullName: "New South Wales",    color: "#0984E3", center: [-32.0,   146.5],     zoom: 6  },
-  VIC: { label: "VIC",  fullName: "Victoria",           color: "#6C5CE7", center: [-37.0,   144.5],     zoom: 7  },
-  QLD: { label: "QLD",  fullName: "Queensland",         color: "#FF7F00", center: [-22.0,   144.5],     zoom: 5  },
-  WA:  { label: "WA",   fullName: "Western Australia",  color: "#00B894", center: [-26.0,   121.5],     zoom: 5  },
-  SA:  { label: "SA",   fullName: "South Australia",    color: "#E84040", center: [-30.0,   135.5],     zoom: 6  },
-  TAS: { label: "TAS",  fullName: "Tasmania",           color: "#2D9CDB", center: [-42.0,   146.5],     zoom: 7  },
-  ACT: { label: "ACT",  fullName: "ACT",                color: "#E91E8C", center: [-35.47,  149.0],     zoom: 10 },
-  NT:  { label: "NT",   fullName: "Northern Territory", color: "#E6A817", center: [-19.5,   133.0],     zoom: 6  },
+  all: { label: "전체", fullName: "All States",         color: "#94A3B8", center: [-25.2744, 133.7751], zoom: 4  },
+  NSW: { label: "NSW",  fullName: "New South Wales",    color: "#D946EF", center: [-32.0,   146.5],     zoom: 6  },
+  VIC: { label: "VIC",  fullName: "Victoria",           color: "#A3E635", center: [-37.0,   144.5],     zoom: 7  },
+  QLD: { label: "QLD",  fullName: "Queensland",         color: "#D97706", center: [-22.0,   144.5],     zoom: 5  },
+  WA:  { label: "WA",   fullName: "Western Australia",  color: "#2DD4BF", center: [-26.0,   121.5],     zoom: 5  },
+  SA:  { label: "SA",   fullName: "South Australia",    color: "#059669", center: [-30.0,   135.5],     zoom: 6  },
+  TAS: { label: "TAS",  fullName: "Tasmania",           color: "#F43F5E", center: [-42.0,   146.5],     zoom: 7  },
+  ACT: { label: "ACT",  fullName: "ACT",                color: "#F59E0B", center: [-35.47,  149.0],     zoom: 10 },
+  NT:  { label: "NT",   fullName: "Northern Territory", color: "#60A5FA", center: [-19.5,   133.0],     zoom: 6  },
 };
 
 type DatePreset = "all" | "today" | "week" | "month";
@@ -66,12 +66,22 @@ function getDateRange(preset: DatePreset): { from: Date; to: Date } | null {
   today.setHours(0, 0, 0, 0);
   if (preset === "today") return { from: today, to: today };
   if (preset === "week") {
-    const end = new Date(today);
-    end.setDate(today.getDate() + 6);
-    return { from: today, to: end };
+    // 이번 주 월요일 ~ 일요일 (오늘 포함)
+    const day = today.getDay(); // 0=일, 1=월 ... 6=토
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - ((day + 6) % 7)); // 이번 주 월요일
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    return { from: monday, to: sunday };
   }
-  const end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  return { from: today, to: end };
+  // 이번 달 1일 ~ 말일, 단 이번 주가 달을 넘어가면 그 일요일까지 포함
+  const from = new Date(today.getFullYear(), today.getMonth(), 1);
+  const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  const day = today.getDay();
+  const sunday = new Date(today);
+  sunday.setDate(today.getDate() + (7 - ((day + 6) % 7)) % 7); // 이번 주 일요일
+  const to = sunday > monthEnd ? sunday : monthEnd;
+  return { from, to };
 }
 
 // ─── FilterSection ────────────────────────────────────────────────────────────
@@ -147,6 +157,17 @@ function EventListItem({ event, isActive, onClick }: {
               <span className="ml-1 text-xs" style={{ color: "var(--text-muted)" }}>A${event.price}</span>
             )}
           </div>
+          <div className="mt-1.5">
+            <span
+              className="text-xs font-semibold px-2 py-0.5 rounded-full"
+              style={{
+                backgroundColor: CATEGORY_META[event.category]?.bg ?? "#F4F6F8",
+                color: CATEGORY_META[event.category]?.color ?? "#8898AA",
+              }}
+            >
+              {CATEGORY_META[event.category]?.label ?? event.category}
+            </span>
+          </div>
         </div>
       </div>
     </button>
@@ -157,20 +178,26 @@ function EventListItem({ event, isActive, onClick }: {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function makeIcon(L: any, color: string, selected: boolean) {
-  const size = selected ? 18 : 12;
+  const w = selected ? 26 : 18;
+  const h = selected ? 34 : 24;
+  const shadow = selected
+    ? `filter:drop-shadow(0 0 4px ${color}88) drop-shadow(0 2px 6px rgba(0,0,0,0.35))`
+    : `filter:drop-shadow(0 1px 3px rgba(0,0,0,0.3))`;
   return L.divIcon({
     className: "",
-    html: `<div style="
-      width:${size}px;height:${size}px;border-radius:50%;
-      background:${color};border:2px solid white;
-      box-shadow:${selected
-        ? `0 0 0 3px ${color}55,0 2px 8px rgba(0,0,0,0.3)`
-        : "0 1px 4px rgba(0,0,0,0.25)"};
-      cursor:pointer;transition:all 0.15s ease;
-    "></div>`,
-    iconSize:   [size, size],
-    iconAnchor: [size / 2, size / 2],
-    popupAnchor:[0, -(size / 2) - 4],
+    html: `
+      <div style="background:transparent;border:none;padding:0;margin:0;line-height:0">
+        <svg width="${w}" height="${h}" viewBox="0 0 20 28"
+          xmlns="http://www.w3.org/2000/svg"
+          style="cursor:pointer;${shadow};transition:all 0.15s ease;display:block">
+          <path d="M10 0C4.477 0 0 4.477 0 10c0 6.627 10 18 10 18S20 16.627 20 10C20 4.477 15.523 0 10 0z"
+            fill="${color}" stroke="white" stroke-width="1.5"/>
+          <circle cx="10" cy="10" r="3.5" fill="white" opacity="0.85"/>
+        </svg>
+      </div>`,
+    iconSize:    [w, h],
+    iconAnchor:  [w / 2, h],
+    popupAnchor: [0, -h],
   });
 }
 
@@ -179,12 +206,21 @@ function makePopupHtml(event: Event, color: string): string {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${event.location.venue}, ${event.location.city} ${event.location.state} Australia`
   )}`;
+  const catLabel = CATEGORY_META[event.category]?.label ?? event.category;
+  const catBg    = CATEGORY_META[event.category]?.bg    ?? "#F4F6F8";
   return `
     <div style="min-width:210px;max-width:260px;font-family:system-ui,-apple-system,sans-serif;padding:2px 0">
-      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px">
         <span style="width:8px;height:8px;border-radius:50%;background:${color};
           flex-shrink:0;margin-top:4px;display:inline-block"></span>
         <span style="font-weight:600;font-size:13px;color:#2C3E50;line-height:1.4">${event.title}</span>
+      </div>
+      <div style="margin-bottom:8px">
+        <span style="display:inline-block;font-size:11px;font-weight:600;
+          padding:2px 8px;border-radius:20px;
+          background:${catBg};color:${color}">
+          ${catLabel}
+        </span>
       </div>
       <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer"
         style="display:flex;align-items:center;gap:4px;font-size:12px;color:#0984E3;
@@ -241,9 +277,10 @@ function LeafletMap({ events, selectedEvent, onSelect, activeState }: {
       if (cancelled || mapRef.current || !containerRef.current) return;
       const map = L.map(containerRef.current, { center: [-25.2744, 133.7751], zoom: 4 });
       mapRef.current = map;
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        maxZoom: 19,
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: "abcd",
+        maxZoom: 20,
       }).addTo(map);
       map.on("click", () => onSelect(null));
       setIsMapReady(true);
@@ -273,6 +310,16 @@ function LeafletMap({ events, selectedEvent, onSelect, activeState }: {
         marker.bindPopup(makePopupHtml(event, color), { maxWidth: 280 });
         marker.on("click", () => onSelect(event));
         marker.addTo(map);
+        // Leaflet이 동적으로 추가하는 기본 border/background 강제 제거
+        marker.on("add", () => {
+          const el = marker.getElement();
+          if (el) {
+            el.style.border = "none";
+            el.style.background = "transparent";
+            el.style.outline = "none";
+            el.style.boxShadow = "none";
+          }
+        });
         markersRef.current.set(event.id, marker);
       });
 
@@ -342,18 +389,31 @@ export default function MapPageClient({ events }: { events: Event[] }) {
   const [query, setQuery]             = useState("");
   const [activeCategory, setCategory] = useState("all");
   const [activeDatePreset, setDate]   = useState<DatePreset>("all");
+  const [customFrom, setCustomFrom]   = useState("");
+  const [customTo, setCustomTo]       = useState("");
   const [activeState, setState]       = useState("all");
   const [selectedEvent, setSelected]  = useState<Event | null>(null);
 
+  const hasCustomRange = customFrom !== "" || customTo !== "";
+
   const activeFilterCount = [
     activeCategory !== "all",
-    activeDatePreset !== "all",
+    activeDatePreset !== "all" || hasCustomRange,
     activeState !== "all",
   ].filter(Boolean).length;
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
-    const dateRange = getDateRange(activeDatePreset);
+    // 커스텀 범위가 있으면 우선 적용, 아니면 프리셋 사용
+    let dateRange: { from: Date; to: Date } | null = null;
+    if (customFrom || customTo) {
+      const from = customFrom ? new Date(customFrom) : new Date("1970-01-01");
+      const to   = customTo   ? new Date(customTo)   : new Date("2099-12-31");
+      from.setHours(0, 0, 0, 0); to.setHours(0, 0, 0, 0);
+      dateRange = { from, to };
+    } else {
+      dateRange = getDateRange(activeDatePreset);
+    }
     return events.filter((e) => {
       if (q && !(
         e.title.toLowerCase().includes(q) ||
@@ -369,14 +429,15 @@ export default function MapPageClient({ events }: { events: Event[] }) {
       if (activeState !== "all" && e.location.state !== activeState) return false;
       return true;
     });
-  }, [events, query, activeCategory, activeDatePreset, activeState]);
+  }, [events, query, activeCategory, activeDatePreset, customFrom, customTo, activeState]);
 
   const handleEventClick = useCallback((event: Event) => {
     setSelected((prev) => (prev?.id === event.id ? null : event));
   }, []);
 
   const resetAll = () => {
-    setQuery(""); setCategory("all"); setDate("all"); setState("all"); setSelected(null);
+    setQuery(""); setCategory("all"); setDate("all");
+    setCustomFrom(""); setCustomTo(""); setState("all"); setSelected(null);
   };
 
   return (
@@ -433,13 +494,15 @@ export default function MapPageClient({ events }: { events: Event[] }) {
         </FilterSection>
 
         {/* 날짜 필터 */}
-        <FilterSection title="날짜" badge={activeDatePreset !== "all"
-          ? DATE_PRESETS.find((d) => d.value === activeDatePreset)?.label : undefined}>
-          <div className="grid grid-cols-2 gap-1.5">
+        <FilterSection title="날짜" badge={
+          hasCustomRange ? "직접 설정" :
+          activeDatePreset !== "all" ? DATE_PRESETS.find((d) => d.value === activeDatePreset)?.label : undefined
+        }>
+          <div className="grid grid-cols-2 gap-1.5 mb-2.5">
             {DATE_PRESETS.map(({ value, label }) => {
-              const active = activeDatePreset === value;
+              const active = activeDatePreset === value && !hasCustomRange;
               return (
-                <button key={value} onClick={() => setDate(value)}
+                <button key={value} onClick={() => { setDate(value); setCustomFrom(""); setCustomTo(""); }}
                   className="py-1.5 rounded-lg text-xs font-medium transition-colors"
                   style={{
                     backgroundColor: active ? "var(--primary)" : "#FFF5F4",
@@ -450,6 +513,43 @@ export default function MapPageClient({ events }: { events: Event[] }) {
                 </button>
               );
             })}
+          </div>
+          {/* 직접 날짜 범위 입력 */}
+          <div className="flex flex-col gap-1.5">
+            <p className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>직접 설정</p>
+            <div className="flex items-center gap-1.5">
+              <input
+                type="date"
+                value={customFrom}
+                onChange={(e) => { setCustomFrom(e.target.value); setDate("all"); }}
+                className="flex-1 text-xs rounded-lg px-2 py-1.5 outline-none"
+                style={{
+                  border: `1px solid ${customFrom ? "var(--primary)" : "var(--border)"}`,
+                  backgroundColor: "#FFF5F4",
+                  color: "var(--text)",
+                }}
+              />
+              <span className="text-xs" style={{ color: "var(--text-muted)" }}>~</span>
+              <input
+                type="date"
+                value={customTo}
+                min={customFrom || undefined}
+                onChange={(e) => { setCustomTo(e.target.value); setDate("all"); }}
+                className="flex-1 text-xs rounded-lg px-2 py-1.5 outline-none"
+                style={{
+                  border: `1px solid ${customTo ? "var(--primary)" : "var(--border)"}`,
+                  backgroundColor: "#FFF5F4",
+                  color: "var(--text)",
+                }}
+              />
+              {hasCustomRange && (
+                <button onClick={() => { setCustomFrom(""); setCustomTo(""); }}
+                  className="p-1 rounded-md"
+                  style={{ color: "var(--text-muted)" }}>
+                  <X size={12} />
+                </button>
+              )}
+            </div>
           </div>
         </FilterSection>
 
