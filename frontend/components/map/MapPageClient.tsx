@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { Search, MapPin, Clock, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Search, MapPin, Clock, X, ChevronDown, ChevronUp, ExternalLink, Ticket } from "lucide-react";
+import StarButton from "@/components/featured/StarButton";
 import type { Event } from "@/lib/types";
 
 // ─── 상수 ────────────────────────────────────────────────────────────────────
@@ -34,14 +35,14 @@ const STATE_META: Record<string, {
   center: [number, number]; zoom: number;
 }> = {
   all: { label: "전체", fullName: "All States",         color: "#94A3B8", center: [-25.2744, 133.7751], zoom: 4  },
-  NSW: { label: "NSW",  fullName: "New South Wales",    color: "#D946EF", center: [-32.0,   146.5],     zoom: 6  },
-  VIC: { label: "VIC",  fullName: "Victoria",           color: "#A3E635", center: [-37.0,   144.5],     zoom: 7  },
-  QLD: { label: "QLD",  fullName: "Queensland",         color: "#D97706", center: [-22.0,   144.5],     zoom: 5  },
-  WA:  { label: "WA",   fullName: "Western Australia",  color: "#2DD4BF", center: [-26.0,   121.5],     zoom: 5  },
-  SA:  { label: "SA",   fullName: "South Australia",    color: "#059669", center: [-30.0,   135.5],     zoom: 6  },
-  TAS: { label: "TAS",  fullName: "Tasmania",           color: "#F43F5E", center: [-42.0,   146.5],     zoom: 7  },
-  ACT: { label: "ACT",  fullName: "ACT",                color: "#F59E0B", center: [-35.47,  149.0],     zoom: 10 },
-  NT:  { label: "NT",   fullName: "Northern Territory", color: "#60A5FA", center: [-19.5,   133.0],     zoom: 6  },
+  NSW: { label: "NSW",  fullName: "New South Wales",    color: "#C2185B", center: [-32.0,   146.5],     zoom: 6  },
+  VIC: { label: "VIC",  fullName: "Victoria",           color: "#4B2E2E", center: [-37.0,   144.5],     zoom: 7  },
+  QLD: { label: "QLD",  fullName: "Queensland",         color: "#556B2F", center: [-22.0,   144.5],     zoom: 5  },
+  WA:  { label: "WA",   fullName: "Western Australia",  color: "#B8860B", center: [-26.0,   121.5],     zoom: 5  },
+  SA:  { label: "SA",   fullName: "South Australia",    color: "#8B0000", center: [-30.0,   135.5],     zoom: 6  },
+  TAS: { label: "TAS",  fullName: "Tasmania",           color: "#2F4F4F", center: [-42.0,   146.5],     zoom: 7  },
+  ACT: { label: "ACT",  fullName: "ACT",                color: "#A0522D", center: [-35.47,  149.0],     zoom: 10 },
+  NT:  { label: "NT",   fullName: "Northern Territory", color: "#483D8B", center: [-19.5,   133.0],     zoom: 6  },
 };
 
 type DatePreset = "all" | "today" | "week" | "month";
@@ -138,11 +139,14 @@ function EventListItem({ event, isActive, onClick }: {
           width: 8, height: 8, borderRadius: "50%",
           backgroundColor: color, display: "inline-block",
         }} />
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold truncate leading-snug"
-            style={{ color: isActive ? color : "var(--text)" }}>
-            {event.title}
-          </p>
+        <div className="min-w-0 flex-1 flex flex-col">
+          <div className="flex items-start justify-between gap-1">
+            <p className="text-sm font-semibold truncate leading-snug flex-1"
+              style={{ color: isActive ? color : "var(--text)" }}>
+              {event.title}
+            </p>
+            <StarButton eventId={event.id} />
+          </div>
           <div className="flex items-center gap-1 mt-1" style={{ color: "var(--text-muted)" }}>
             <MapPin size={11} />
             <span className="text-xs truncate">{event.location.venue}, {event.location.city}</span>
@@ -157,7 +161,7 @@ function EventListItem({ event, isActive, onClick }: {
               <span className="ml-1 text-xs" style={{ color: "var(--text-muted)" }}>A${event.price}</span>
             )}
           </div>
-          <div className="mt-1.5">
+          <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
             <span
               className="text-xs font-semibold px-2 py-0.5 rounded-full"
               style={{
@@ -167,6 +171,48 @@ function EventListItem({ event, isActive, onClick }: {
             >
               {CATEGORY_META[event.category]?.label ?? event.category}
             </span>
+            {event.location.state && (
+              <span
+                className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                style={{
+                  backgroundColor: STATE_META[event.location.state]?.color
+                    ? `${STATE_META[event.location.state].color}18`
+                    : "#F4F6F8",
+                  color: STATE_META[event.location.state]?.color ?? "#8898AA",
+                }}
+              >
+                {STATE_META[event.location.state]?.label ?? event.location.state}
+              </span>
+            )}
+          </div>
+          {/* 홈페이지 + 티켓 버튼 — 오른쪽 맨 하단 */}
+          <div className="mt-auto pt-2 flex items-center gap-1.5 justify-end">
+            {event.ticketUrl ? (
+              <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
+                style={{ color: "#00B894", backgroundColor: "#E0F8F3" }}>
+                <Ticket size={11} />티켓
+              </a>
+            ) : (
+              <span className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full"
+                style={{ color: "#C0C0C0", backgroundColor: "#F4F6F8" }}>
+                <Ticket size={11} />티켓
+              </span>
+            )}
+            {event.website ? (
+              <a href={event.website} target="_blank" rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
+                style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}>
+                <ExternalLink size={11} />홈페이지
+              </a>
+            ) : (
+              <span className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full"
+                style={{ color: "#C0C0C0", backgroundColor: "#F4F6F8" }}>
+                <ExternalLink size={11} />홈페이지
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -206,8 +252,11 @@ function makePopupHtml(event: Event, color: string): string {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${event.location.venue}, ${event.location.city} ${event.location.state} Australia`
   )}`;
-  const catLabel = CATEGORY_META[event.category]?.label ?? event.category;
-  const catBg    = CATEGORY_META[event.category]?.bg    ?? "#F4F6F8";
+  const catLabel   = CATEGORY_META[event.category]?.label ?? event.category;
+  const catBg      = CATEGORY_META[event.category]?.bg    ?? "#F4F6F8";
+  const stateColor = STATE_META[event.location.state]?.color ?? "#8898AA";
+  const stateLabel = STATE_META[event.location.state]?.label ?? event.location.state;
+  const stateBg    = `${stateColor}18`;
   return `
     <div style="min-width:210px;max-width:260px;font-family:system-ui,-apple-system,sans-serif;padding:2px 0">
       <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px">
@@ -215,11 +264,16 @@ function makePopupHtml(event: Event, color: string): string {
           flex-shrink:0;margin-top:4px;display:inline-block"></span>
         <span style="font-weight:600;font-size:13px;color:#2C3E50;line-height:1.4">${event.title}</span>
       </div>
-      <div style="margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap">
         <span style="display:inline-block;font-size:11px;font-weight:600;
           padding:2px 8px;border-radius:20px;
           background:${catBg};color:${color}">
           ${catLabel}
+        </span>
+        <span style="display:inline-block;font-size:11px;font-weight:600;
+          padding:2px 8px;border-radius:20px;
+          background:${stateBg};color:${stateColor}">
+          ${stateLabel}
         </span>
       </div>
       <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer"
@@ -237,15 +291,52 @@ function makePopupHtml(event: Event, color: string): string {
         color:${event.price === null ? "#00B894" : "#FF6B6B"}">
         ${priceText}
       </div>
-      <div>
+      <div style="display:flex;gap:6px">
         ${event.website
           ? `<a href="${event.website}" target="_blank" rel="noopener noreferrer"
-              style="display:block;text-align:center;padding:7px 12px;border-radius:8px;
-                background:#FF6B6B;color:#fff;font-size:12px;font-weight:600;text-decoration:none;">
-              🔗 공식 홈페이지 바로가기
+              style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+                padding:7px 10px;border-radius:8px;background:#FFF0EF;
+                color:#FF6B6B;font-size:12px;font-weight:600;text-decoration:none;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              홈페이지
             </a>`
-          : `<span style="display:block;text-align:center;padding:7px 12px;border-radius:8px;
-              background:#F4F6F8;color:#8898AA;font-size:12px;">홈페이지 정보 없음</span>`
+          : `<span style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+              padding:7px 10px;border-radius:8px;background:#F4F6F8;
+              color:#C0C0C0;font-size:12px;font-weight:600;cursor:not-allowed;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              홈페이지
+            </span>`
+        }
+        ${event.ticketUrl
+          ? `<a href="${event.ticketUrl}" target="_blank" rel="noopener noreferrer"
+              style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+                padding:7px 10px;border-radius:8px;background:#E0F8F3;
+                color:#00B894;font-size:12px;font-weight:600;text-decoration:none;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+                <path d="M13 5v2M13 17v2M13 11v2"/>
+              </svg>
+              티켓
+            </a>`
+          : `<span style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+              padding:7px 10px;border-radius:8px;background:#F4F6F8;
+              color:#C0C0C0;font-size:12px;font-weight:600;cursor:not-allowed;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+                <path d="M13 5v2M13 17v2M13 11v2"/>
+              </svg>
+              티켓
+            </span>`
         }
       </div>
     </div>`;

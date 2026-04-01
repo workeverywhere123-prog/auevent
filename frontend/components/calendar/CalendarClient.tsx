@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight, MapPin, Clock, Ticket, ExternalLink, X } from "lucide-react";
-import { CATEGORY_META } from "@/lib/mock-data";
+import { ChevronLeft, ChevronRight, MapPin, Ticket, ExternalLink, X } from "lucide-react";
+import StarButton from "@/components/featured/StarButton";
+import { CATEGORY_META, STATE_META } from "@/lib/mock-data";
 import type { Event } from "@/lib/types";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -75,17 +76,31 @@ function DayEventCard({ event }: { event: Event }) {
       style={{ border: "1px solid var(--border)", backgroundColor: "var(--card-bg)" }}
     >
       <div className="h-1.5" style={{ backgroundColor: meta.color }} />
-      <div className="p-4">
+      <div className="p-4 flex flex-col h-full">
         <div className="flex items-start justify-between gap-2 mb-2">
           <h3 className="font-semibold text-sm leading-snug flex-1" style={{ color: "var(--text)" }}>
             {event.title}
           </h3>
-          <span
-            className="text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0"
-            style={{ backgroundColor: meta.bg, color: meta.color }}
-          >
-            {meta.label}
-          </span>
+          <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
+            <StarButton eventId={event.id} />
+            <span
+              className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: meta.bg, color: meta.color }}
+            >
+              {meta.label}
+            </span>
+            {event.location.state && STATE_META[event.location.state] && (
+              <span
+                className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                style={{
+                  color: STATE_META[event.location.state].color,
+                  backgroundColor: `${STATE_META[event.location.state].color}18`,
+                }}
+              >
+                {STATE_META[event.location.state].label}
+              </span>
+            )}
+          </div>
         </div>
 
         <p className="text-xs line-clamp-2 mb-3" style={{ color: "var(--text-muted)" }}>
@@ -93,18 +108,23 @@ function DayEventCard({ event }: { event: Event }) {
         </p>
 
         <div className="flex flex-col gap-1.5">
-          <div className="flex items-center gap-1.5" style={{ color: "var(--text-muted)" }}>
-            <Clock size={12} />
-            <span className="text-xs">
-              {formatDate(event.date)}
-              {event.endDate && event.endDate !== event.date ? ` — ${formatDate(event.endDate)}` : ""}
-              {" · "}{event.time}
-            </span>
+          <div className="text-xs" style={{ color: "#8898AA" }}>
+            🗓 {formatDate(event.date)}
+            {event.endDate && event.endDate !== event.date ? ` — ${formatDate(event.endDate)}` : ""}
+            {" · "}{event.time}
           </div>
-          <div className="flex items-center gap-1.5" style={{ color: "var(--text-muted)" }}>
-            <MapPin size={12} />
-            <span className="text-xs truncate">{event.location.venue}, {event.location.city}, {event.location.state}</span>
-          </div>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+              `${event.location.venue}, ${event.location.city} ${event.location.state} Australia`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-xs"
+            style={{ color: "#0984E3", textDecoration: "none" }}
+          >
+            📍 <span className="truncate">{event.location.venue}, {event.location.city}, {event.location.state}</span>
+            <span style={{ fontSize: 10, opacity: 0.7, flexShrink: 0 }}>↗</span>
+          </a>
           <div className="flex items-center gap-1.5">
             <Ticket size={12} style={{ color: "var(--text-muted)" }} />
             <span
@@ -116,24 +136,38 @@ function DayEventCard({ event }: { event: Event }) {
           </div>
         </div>
 
-        <div className="mt-3 flex items-center justify-between gap-2">
+        <div className="mt-auto pt-3 flex items-center justify-between gap-2">
           {event.featured && (
             <span className="text-[10px] font-medium px-2 py-1 rounded-full" style={{ color: "#FF9F43", backgroundColor: "#FFF4E6" }}>
               ★ Featured
             </span>
           )}
-          {event.ticketUrl && (
-            <a
-              href={event.ticketUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ml-auto transition-opacity hover:opacity-80"
-              style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}
-            >
-              <ExternalLink size={11} />
-              Tickets
-            </a>
-          )}
+          <div className="flex items-center gap-1.5 ml-auto">
+            {event.ticketUrl ? (
+              <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
+                style={{ color: "#00B894", backgroundColor: "#E0F8F3" }}>
+                <Ticket size={11} />티켓
+              </a>
+            ) : (
+              <span className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full cursor-not-allowed"
+                style={{ color: "#C0C0C0", backgroundColor: "#F4F6F8" }}>
+                <Ticket size={11} />티켓
+              </span>
+            )}
+            {event.website ? (
+              <a href={event.website} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
+                style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}>
+                <ExternalLink size={11} />홈페이지
+              </a>
+            ) : (
+              <span className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full cursor-not-allowed"
+                style={{ color: "#C0C0C0", backgroundColor: "#F4F6F8" }}>
+                <ExternalLink size={11} />홈페이지
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -755,6 +755,17 @@ export const CATEGORY_META: Record<
   all:      { label: "All",      color: "#8898AA", bg: "#F4F6F8" },
 };
 
+export const STATE_META: Record<string, { label: string; color: string }> = {
+  NSW: { label: "NSW", color: "#C2185B" },
+  VIC: { label: "VIC", color: "#4B2E2E" },
+  QLD: { label: "QLD", color: "#556B2F" },
+  WA:  { label: "WA",  color: "#B8860B" },
+  SA:  { label: "SA",  color: "#8B0000" },
+  TAS: { label: "TAS", color: "#2F4F4F" },
+  ACT: { label: "ACT", color: "#A0522D" },
+  NT:  { label: "NT",  color: "#483D8B" },
+};
+
 export function getEventsByMonth(year: number, month: number): Event[] {
   return MOCK_EVENTS.filter((e) => {
     const d = new Date(e.date);
