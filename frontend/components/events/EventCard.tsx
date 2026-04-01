@@ -1,5 +1,6 @@
 import type { Event } from "@/lib/types";
 import CategoryBadge from "./CategoryBadge";
+import { CATEGORY_META } from "@/lib/mock-data";
 import { MapPin, Clock, Ticket, ExternalLink } from "lucide-react";
 
 type Props = {
@@ -53,10 +54,10 @@ export default function EventCard({ event, compact = false }: Props) {
       className="rounded-xl overflow-hidden transition-shadow hover:shadow-md cursor-pointer"
       style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}
     >
-      {/* Header color band */}
+      {/* Header color band — category color */}
       <div
         className="h-2 w-full"
-        style={{ backgroundColor: "var(--primary)" }}
+        style={{ backgroundColor: CATEGORY_META[event.category]?.color ?? "var(--primary)" }}
       />
 
       <div className="p-4">
