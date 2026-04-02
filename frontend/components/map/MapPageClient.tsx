@@ -35,14 +35,14 @@ const STATE_META: Record<string, {
   center: [number, number]; zoom: number;
 }> = {
   all: { label: "전체", fullName: "All States",         color: "#94A3B8", center: [-25.2744, 133.7751], zoom: 4  },
-  NSW: { label: "NSW",  fullName: "New South Wales",    color: "#C2185B", center: [-32.0,   146.5],     zoom: 6  },
-  VIC: { label: "VIC",  fullName: "Victoria",           color: "#4B2E2E", center: [-37.0,   144.5],     zoom: 7  },
-  QLD: { label: "QLD",  fullName: "Queensland",         color: "#556B2F", center: [-22.0,   144.5],     zoom: 5  },
-  WA:  { label: "WA",   fullName: "Western Australia",  color: "#B8860B", center: [-26.0,   121.5],     zoom: 5  },
-  SA:  { label: "SA",   fullName: "South Australia",    color: "#8B0000", center: [-30.0,   135.5],     zoom: 6  },
-  TAS: { label: "TAS",  fullName: "Tasmania",           color: "#2F4F4F", center: [-42.0,   146.5],     zoom: 7  },
-  ACT: { label: "ACT",  fullName: "ACT",                color: "#A0522D", center: [-35.47,  149.0],     zoom: 10 },
-  NT:  { label: "NT",   fullName: "Northern Territory", color: "#483D8B", center: [-19.5,   133.0],     zoom: 6  },
+  NSW: { label: "NSW",  fullName: "New South Wales",    color: "#9333EA", center: [-32.0,   146.5],     zoom: 6  },
+  VIC: { label: "VIC",  fullName: "Victoria",           color: "#EC4899", center: [-37.0,   144.5],     zoom: 7  },
+  QLD: { label: "QLD",  fullName: "Queensland",         color: "#B45309", center: [-22.0,   144.5],     zoom: 5  },
+  WA:  { label: "WA",   fullName: "Western Australia",  color: "#92400E", center: [-26.0,   121.5],     zoom: 5  },
+  SA:  { label: "SA",   fullName: "South Australia",    color: "#0891B2", center: [-30.0,   135.5],     zoom: 6  },
+  TAS: { label: "TAS",  fullName: "Tasmania",           color: "#34D399", center: [-42.0,   146.5],     zoom: 7  },
+  ACT: { label: "ACT",  fullName: "ACT",                color: "#E8956D", center: [-35.47,  149.0],     zoom: 10 },
+  NT:  { label: "NT",   fullName: "Northern Territory", color: "#C4A882", center: [-19.5,   133.0],     zoom: 6  },
 };
 
 type DatePreset = "all" | "today" | "week" | "month";
@@ -125,9 +125,9 @@ function EventListItem({ event, isActive, onClick }: {
 }) {
   const color = CATEGORY_COLORS[event.category] ?? "#FF6B6B";
   return (
-    <button
+    <div
       onClick={onClick}
-      className="w-full text-left px-4 py-3 transition-all"
+      className="w-full text-left px-4 py-3 transition-all cursor-pointer"
       style={{
         backgroundColor: isActive ? "#FFF5F4" : "transparent",
         borderLeft: `3px solid ${isActive ? color : "transparent"}`,
@@ -216,7 +216,7 @@ function EventListItem({ event, isActive, onClick }: {
           </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 

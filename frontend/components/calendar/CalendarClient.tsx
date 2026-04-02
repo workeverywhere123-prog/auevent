@@ -184,7 +184,19 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
   const [selected, setSelected] = useState<Date | null>(null);
   const [events, setEvents]     = useState<Event[]>(initialEvents);
   const [loading, setLoading]   = useState(false);
+  const [dateInput, setDateInput] = useState("");
   const dayPanelRef = useRef<HTMLDivElement>(null);
+
+  const handleDateSearch = (value: string) => {
+    setDateInput(value);
+    if (!value) return;
+    const parsed = new Date(value + "T00:00:00");
+    if (isNaN(parsed.getTime())) return;
+    setYear(parsed.getFullYear());
+    setMonth(parsed.getMonth());
+    setSelected(parsed);
+    setTimeout(() => dayPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+  };
 
   const fetchMonth = useCallback(async (y: number, m: number, s: string) => {
     setLoading(true);
@@ -262,21 +274,48 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
 
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid var(--border)" }}>
-          <select
-            value={state}
-            onChange={(e) => { setState(e.target.value); setSelected(null); }}
-            className="text-sm rounded-lg px-2.5 py-1.5 outline-none cursor-pointer"
-            style={{
-              border: "1px solid var(--border)",
-              backgroundColor: "var(--background)",
-              color: state !== "all" ? "var(--primary)" : "var(--text-muted)",
-              fontWeight: state !== "all" ? 600 : 400,
-            }}
-          >
-            {STATE_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+          <div className="flex items-center gap-2">
+            <select
+              value={state}
+              onChange={(e) => { setState(e.target.value); setSelected(null); }}
+              className="text-sm rounded-lg px-2.5 py-1.5 outline-none cursor-pointer"
+              style={{
+                border: "1px solid var(--border)",
+                backgroundColor: "var(--background)",
+                color: state !== "all" ? "var(--primary)" : "var(--text-muted)",
+                fontWeight: state !== "all" ? 600 : 400,
+              }}
+            >
+              {STATE_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+
+            <div className="w-px h-5" style={{ backgroundColor: "var(--border)" }} />
+
+            <div className="flex items-center gap-1.5">
+              <input
+                type="date"
+                value={dateInput}
+                onChange={(e) => handleDateSearch(e.target.value)}
+                className="text-sm rounded-lg px-2.5 py-1.5 outline-none"
+                style={{
+                  border: "1px solid var(--border)",
+                  backgroundColor: "var(--background)",
+                  color: dateInput ? "var(--text)" : "var(--text-muted)",
+                }}
+              />
+              {dateInput && (
+                <button
+                  onClick={() => { setDateInput(""); setSelected(null); }}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors hover:bg-gray-100"
+                  style={{ border: "1px solid var(--border)", color: "var(--text-muted)" }}
+                >
+                  <X size={13} />
+                </button>
+              )}
+            </div>
+          </div>
 
           <div className="flex items-center gap-1">
             <button onClick={prevMonth} className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors hover:bg-gray-100" style={{ color: "var(--text-muted)" }}>
