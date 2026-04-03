@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight, MapPin, Clock, Ticket, ExternalLink, X } from "lucide-react";
-import { CATEGORY_META } from "@/lib/mock-data";
+import { ChevronLeft, ChevronRight, MapPin, Ticket, ExternalLink, X } from "lucide-react";
+import StarButton from "@/components/featured/StarButton";
+import { CATEGORY_META, STATE_META } from "@/lib/mock-data";
 import type { Event } from "@/lib/types";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -75,17 +76,31 @@ function DayEventCard({ event }: { event: Event }) {
       style={{ border: "1px solid var(--border)", backgroundColor: "var(--card-bg)" }}
     >
       <div className="h-1.5" style={{ backgroundColor: meta.color }} />
-      <div className="p-4">
+      <div className="p-4 flex flex-col h-full">
         <div className="flex items-start justify-between gap-2 mb-2">
           <h3 className="font-semibold text-sm leading-snug flex-1" style={{ color: "var(--text)" }}>
             {event.title}
           </h3>
-          <span
-            className="text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0"
-            style={{ backgroundColor: meta.bg, color: meta.color }}
-          >
-            {meta.label}
-          </span>
+          <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
+            <StarButton eventId={event.id} />
+            <span
+              className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: meta.bg, color: meta.color }}
+            >
+              {meta.label}
+            </span>
+            {event.location.state && STATE_META[event.location.state] && (
+              <span
+                className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                style={{
+                  color: STATE_META[event.location.state].color,
+                  backgroundColor: `${STATE_META[event.location.state].color}18`,
+                }}
+              >
+                {STATE_META[event.location.state].label}
+              </span>
+            )}
+          </div>
         </div>
 
         <p className="text-xs line-clamp-2 mb-3" style={{ color: "var(--text-muted)" }}>
@@ -93,18 +108,23 @@ function DayEventCard({ event }: { event: Event }) {
         </p>
 
         <div className="flex flex-col gap-1.5">
-          <div className="flex items-center gap-1.5" style={{ color: "var(--text-muted)" }}>
-            <Clock size={12} />
-            <span className="text-xs">
-              {formatDate(event.date)}
-              {event.endDate && event.endDate !== event.date ? ` — ${formatDate(event.endDate)}` : ""}
-              {" · "}{event.time}
-            </span>
+          <div className="text-xs" style={{ color: "#8898AA" }}>
+            🗓 {formatDate(event.date)}
+            {event.endDate && event.endDate !== event.date ? ` — ${formatDate(event.endDate)}` : ""}
+            {" · "}{event.time}
           </div>
-          <div className="flex items-center gap-1.5" style={{ color: "var(--text-muted)" }}>
-            <MapPin size={12} />
-            <span className="text-xs truncate">{event.location.venue}, {event.location.city}, {event.location.state}</span>
-          </div>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+              `${event.location.venue}, ${event.location.city} ${event.location.state} Australia`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-xs"
+            style={{ color: "#0984E3", textDecoration: "none" }}
+          >
+            📍 <span className="truncate">{event.location.venue}, {event.location.city}, {event.location.state}</span>
+            <span style={{ fontSize: 10, opacity: 0.7, flexShrink: 0 }}>↗</span>
+          </a>
           <div className="flex items-center gap-1.5">
             <Ticket size={12} style={{ color: "var(--text-muted)" }} />
             <span
@@ -116,24 +136,38 @@ function DayEventCard({ event }: { event: Event }) {
           </div>
         </div>
 
-        <div className="mt-3 flex items-center justify-between gap-2">
+        <div className="mt-auto pt-3 flex items-center justify-between gap-2">
           {event.featured && (
             <span className="text-[10px] font-medium px-2 py-1 rounded-full" style={{ color: "#FF9F43", backgroundColor: "#FFF4E6" }}>
               ★ Featured
             </span>
           )}
-          {event.ticketUrl && (
-            <a
-              href={event.ticketUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ml-auto transition-opacity hover:opacity-80"
-              style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}
-            >
-              <ExternalLink size={11} />
-              Tickets
-            </a>
-          )}
+          <div className="flex items-center gap-1.5 ml-auto">
+            {event.ticketUrl ? (
+              <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
+                style={{ color: "#00B894", backgroundColor: "#E0F8F3" }}>
+                <Ticket size={11} />티켓
+              </a>
+            ) : (
+              <span className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full cursor-not-allowed"
+                style={{ color: "#C0C0C0", backgroundColor: "#F4F6F8" }}>
+                <Ticket size={11} />티켓
+              </span>
+            )}
+            {event.website ? (
+              <a href={event.website} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
+                style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}>
+                <ExternalLink size={11} />홈페이지
+              </a>
+            ) : (
+              <span className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full cursor-not-allowed"
+                style={{ color: "#C0C0C0", backgroundColor: "#F4F6F8" }}>
+                <ExternalLink size={11} />홈페이지
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -150,7 +184,19 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
   const [selected, setSelected] = useState<Date | null>(null);
   const [events, setEvents]     = useState<Event[]>(initialEvents);
   const [loading, setLoading]   = useState(false);
+  const [dateInput, setDateInput] = useState("");
   const dayPanelRef = useRef<HTMLDivElement>(null);
+
+  const handleDateSearch = (value: string) => {
+    setDateInput(value);
+    if (!value) return;
+    const parsed = new Date(value + "T00:00:00");
+    if (isNaN(parsed.getTime())) return;
+    setYear(parsed.getFullYear());
+    setMonth(parsed.getMonth());
+    setSelected(parsed);
+    setTimeout(() => dayPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+  };
 
   const fetchMonth = useCallback(async (y: number, m: number, s: string) => {
     setLoading(true);
@@ -228,21 +274,48 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
 
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid var(--border)" }}>
-          <select
-            value={state}
-            onChange={(e) => { setState(e.target.value); setSelected(null); }}
-            className="text-sm rounded-lg px-2.5 py-1.5 outline-none cursor-pointer"
-            style={{
-              border: "1px solid var(--border)",
-              backgroundColor: "var(--background)",
-              color: state !== "all" ? "var(--primary)" : "var(--text-muted)",
-              fontWeight: state !== "all" ? 600 : 400,
-            }}
-          >
-            {STATE_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+          <div className="flex items-center gap-2">
+            <select
+              value={state}
+              onChange={(e) => { setState(e.target.value); setSelected(null); }}
+              className="text-sm rounded-lg px-2.5 py-1.5 outline-none cursor-pointer"
+              style={{
+                border: "1px solid var(--border)",
+                backgroundColor: "var(--background)",
+                color: state !== "all" ? "var(--primary)" : "var(--text-muted)",
+                fontWeight: state !== "all" ? 600 : 400,
+              }}
+            >
+              {STATE_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+
+            <div className="w-px h-5" style={{ backgroundColor: "var(--border)" }} />
+
+            <div className="flex items-center gap-1.5">
+              <input
+                type="date"
+                value={dateInput}
+                onChange={(e) => handleDateSearch(e.target.value)}
+                className="text-sm rounded-lg px-2.5 py-1.5 outline-none"
+                style={{
+                  border: "1px solid var(--border)",
+                  backgroundColor: "var(--background)",
+                  color: dateInput ? "var(--text)" : "var(--text-muted)",
+                }}
+              />
+              {dateInput && (
+                <button
+                  onClick={() => { setDateInput(""); setSelected(null); }}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors hover:bg-gray-100"
+                  style={{ border: "1px solid var(--border)", color: "var(--text-muted)" }}
+                >
+                  <X size={13} />
+                </button>
+              )}
+            </div>
+          </div>
 
           <div className="flex items-center gap-1">
             <button onClick={prevMonth} className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors hover:bg-gray-100" style={{ color: "var(--text-muted)" }}>

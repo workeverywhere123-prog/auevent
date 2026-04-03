@@ -755,6 +755,17 @@ export const CATEGORY_META: Record<
   all:      { label: "All",      color: "#8898AA", bg: "#F4F6F8" },
 };
 
+export const STATE_META: Record<string, { label: string; color: string }> = {
+  NSW: { label: "NSW", color: "#9333EA" },  // 자주색 (purple)
+  VIC: { label: "VIC", color: "#EC4899" },  // 분홍 (pink)
+  QLD: { label: "QLD", color: "#B45309" },  // 겨자색 (mustard)
+  WA:  { label: "WA",  color: "#92400E" },  // 갈색 (brown)
+  SA:  { label: "SA",  color: "#0891B2" },  // 청록색 (teal)
+  TAS: { label: "TAS", color: "#34D399" },  // 민트색 (mint)
+  ACT: { label: "ACT", color: "#E8956D" },  // 살구색 (apricot)
+  NT:  { label: "NT",  color: "#C4A882" },  // 아이보리색 (ivory)
+};
+
 export function getEventsByMonth(year: number, month: number): Event[] {
   return MOCK_EVENTS.filter((e) => {
     const d = new Date(e.date);
