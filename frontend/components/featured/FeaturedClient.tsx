@@ -26,11 +26,11 @@ const CATEGORY_ICONS: Record<string, string> = {
 const DAYS   = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
-const CATEGORY_COLORS: Record<string, string> = {
-  music: "#E84040", food: "#F97316", sports: "#22C55E",
-  arts: "#8B5CF6", cultural: "#EAB308", markets: "#3B82F6",
-  comedy: "#06B6D4", film: "#64748B",
-};
+const CATEGORY_COLORS: Record<string, string> = Object.fromEntries(
+  Object.entries(CATEGORY_META)
+    .filter(([k]) => k !== "all")
+    .map(([k, v]) => [k, v.color])
+);
 
 // ─── 공통 유틸 ────────────────────────────────────────────────────────────────
 function formatDate(dateStr: string) {
@@ -514,6 +514,7 @@ function LeafletMap({ events, selectedEvent, onSelect }: {
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
+    const markers = markersRef.current; // capture ref value for cleanup
     let cancelled = false;
     import("leaflet").then(L => {
       if (cancelled || mapRef.current || !containerRef.current) return;
@@ -529,7 +530,7 @@ function LeafletMap({ events, selectedEvent, onSelect }: {
       cancelled = true;
       mapRef.current?.remove();
       mapRef.current = null;
-      markersRef.current.clear();
+      markers.clear();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -579,7 +580,7 @@ function LeafletMap({ events, selectedEvent, onSelect }: {
       }
       prevSelectedRef.current = selectedEvent;
     });
-  }, [isMapReady, selectedEvent]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isMapReady, selectedEvent]);
 
   return (
     <>
@@ -718,7 +719,10 @@ export default function FeaturedClient({ allEvents }: { allEvents: Event[] }) {
 
   const views: ViewMode[] = ["My Events", "My 캘린더", "My 맵"];
 
-  const starredEvents = ready ? allEvents.filter(e => isStarred(e.id)) : [];
+  const starredEvents = useMemo(
+    () => (ready ? allEvents.filter(e => isStarred(e.id)) : []),
+    [ready, allEvents, isStarred]
+  );
 
   const categoryFilteredEvents = useMemo(() =>
     activeCategory === "all"

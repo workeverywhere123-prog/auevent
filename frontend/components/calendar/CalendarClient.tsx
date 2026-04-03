@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight, MapPin, Ticket, ExternalLink, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Ticket, ExternalLink, X } from "lucide-react";
 import StarButton from "@/components/featured/StarButton";
 import { CATEGORY_META, STATE_META } from "@/lib/mock-data";
 import type { Event } from "@/lib/types";
@@ -186,6 +186,7 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
   const [loading, setLoading]   = useState(false);
   const [dateInput, setDateInput] = useState("");
   const dayPanelRef = useRef<HTMLDivElement>(null);
+  const mountedRef  = useRef(false);
 
   const handleDateSearch = (value: string) => {
     setDateInput(value);
@@ -214,6 +215,10 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
   }, []);
 
   useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
     fetchMonth(year, month, state);
   }, [year, month, state, fetchMonth]);
 

@@ -1,6 +1,5 @@
 import { CATEGORY_META } from "@/lib/mock-data";
 import { fetchEvents } from "@/lib/api";
-import type { EventCategory } from "@/lib/types";
 import EventCard from "@/components/events/EventCard";
 import StateFilter from "@/components/events/StateFilter";
 

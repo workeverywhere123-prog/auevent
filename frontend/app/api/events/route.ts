@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/db/supabase";
-import type { Event } from "@/lib/types";
+import { mapRowToEvent } from "@/lib/api/mappers";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
@@ -33,29 +33,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Map DB rows → Event type
-  const events: Event[] = (data ?? []).map((row) => ({
-    id:          row.id,
-    title:       row.title,
-    description: row.description,
-    date:        row.date,
-    endDate:     row.end_date ?? undefined,
-    time:        row.time,
-    location: {
-      venue: row.venue_name,
-      city:  row.city,
-      state: row.state,
-      lat:   row.lat,
-      lng:   row.lng,
-    },
-    category:  row.category,
-    tags:      row.tags ?? [],
-    price:     row.price ?? null,
-    featured:  row.featured,
-    image:     row.image_url ?? undefined,
-    ticketUrl: row.ticket_url ?? undefined,
-    website:   row.website ?? undefined,
-  }));
+  const events = (data ?? []).map(mapRowToEvent);
 
   return NextResponse.json(events);
 }
