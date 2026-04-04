@@ -18,11 +18,13 @@ export function StarredProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setStarred(new Set(JSON.parse(raw)));
-    } catch {}
-    setReady(true);
+    Promise.resolve().then(() => {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) setStarred(new Set(JSON.parse(raw)));
+      } catch {}
+      setReady(true);
+    });
   }, []);
 
   const toggle = useCallback((id: string) => {

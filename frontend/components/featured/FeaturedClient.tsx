@@ -7,6 +7,8 @@ import EventCard from "@/components/events/EventCard";
 import { CATEGORY_META, STATE_META } from "@/lib/mock-data";
 import { ChevronLeft, ChevronRight, ChevronDown, X, MapPin, Clock, Ticket, ExternalLink, Star } from "lucide-react";
 import StarButton from "@/components/featured/StarButton";
+import { safeUrl } from "@/lib/utils/url";
+import { escapeHtml } from "@/lib/utils/html";
 
 type ViewMode = "My Events" | "My 캘린더" | "My 맵";
 
@@ -26,11 +28,11 @@ const CATEGORY_ICONS: Record<string, string> = {
 const DAYS   = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
-const CATEGORY_COLORS: Record<string, string> = {
-  music: "#E84040", food: "#F97316", sports: "#22C55E",
-  arts: "#8B5CF6", cultural: "#EAB308", markets: "#3B82F6",
-  comedy: "#06B6D4", film: "#64748B",
-};
+const CATEGORY_COLORS: Record<string, string> = Object.fromEntries(
+  Object.entries(CATEGORY_META)
+    .filter(([k]) => k !== "all")
+    .map(([k, v]) => [k, v.color])
+);
 
 // ─── 공통 유틸 ────────────────────────────────────────────────────────────────
 function formatDate(dateStr: string) {
@@ -129,8 +131,8 @@ function DayEventCard({ event }: { event: Event }) {
               style={{ color: "#FF9F43", backgroundColor: "#FFF4E6" }}>★ Featured</span>
           )}
           <div className="flex items-center gap-1.5 ml-auto">
-            {event.ticketUrl ? (
-              <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer"
+            {safeUrl(event.ticketUrl) ? (
+              <a href={safeUrl(event.ticketUrl)!} target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
                 style={{ color: "#00B894", backgroundColor: "#E0F8F3" }}>
                 <Ticket size={11} />티켓
@@ -141,8 +143,8 @@ function DayEventCard({ event }: { event: Event }) {
                 <Ticket size={11} />티켓
               </span>
             )}
-            {event.website ? (
-              <a href={event.website} target="_blank" rel="noopener noreferrer"
+            {safeUrl(event.website) ? (
+              <a href={safeUrl(event.website)!} target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
                 style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}>
                 <ExternalLink size={11} />홈페이지
@@ -369,19 +371,21 @@ function makePopupHtml(event: Event, color: string): string {
   const stateColor = STATE_META[event.location.state]?.color ?? "#8898AA";
   const stateLabel = STATE_META[event.location.state]?.label ?? event.location.state;
   const stateBg    = `${stateColor}18`;
+  const safeTicketUrl = event.ticketUrl?.startsWith("https://") ? event.ticketUrl : null;
+  const safeWebsite   = event.website?.startsWith("https://")   ? event.website   : null;
   return `
     <div style="min-width:210px;max-width:260px;font-family:system-ui,-apple-system,sans-serif;padding:2px 0">
       <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px">
         <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;margin-top:4px;display:inline-block"></span>
-        <span style="font-weight:600;font-size:13px;color:#2C3E50;line-height:1.4">${event.title}</span>
+        <span style="font-weight:600;font-size:13px;color:#2C3E50;line-height:1.4">${escapeHtml(event.title)}</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap">
-        <span style="display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:${catBg};color:${color}">${catLabel}</span>
-        <span style="display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:${stateBg};color:${stateColor}">${stateLabel}</span>
+        <span style="display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:${catBg};color:${color}">${escapeHtml(catLabel)}</span>
+        <span style="display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:${stateBg};color:${stateColor}">${escapeHtml(stateLabel)}</span>
       </div>
       <a href="${url}" target="_blank" rel="noopener noreferrer"
         style="display:flex;align-items:center;gap:4px;font-size:12px;color:#0984E3;margin-bottom:3px;text-decoration:none;">
-        📍 ${event.location.venue}, ${event.location.city} ${event.location.state}
+        📍 ${escapeHtml(event.location.venue)}, ${escapeHtml(event.location.city)} ${escapeHtml(event.location.state)}
         <span style="font-size:10px;opacity:0.7">↗</span>
       </a>
       <div style="font-size:12px;color:#8898AA;margin-bottom:6px">
@@ -392,8 +396,8 @@ function makePopupHtml(event: Event, color: string): string {
         ${priceText}
       </div>
       <div style="display:flex;gap:6px">
-        ${event.website
-          ? `<a href="${event.website}" target="_blank" rel="noopener noreferrer"
+        ${safeWebsite
+          ? `<a href="${safeWebsite}" target="_blank" rel="noopener noreferrer"
               style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
                 padding:7px 10px;border-radius:8px;background:#FFF0EF;color:#FF6B6B;font-size:12px;font-weight:600;text-decoration:none;">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -405,8 +409,8 @@ function makePopupHtml(event: Event, color: string): string {
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
               </svg>홈페이지</span>`
         }
-        ${event.ticketUrl
-          ? `<a href="${event.ticketUrl}" target="_blank" rel="noopener noreferrer"
+        ${safeTicketUrl
+          ? `<a href="${safeTicketUrl}" target="_blank" rel="noopener noreferrer"
               style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
                 padding:7px 10px;border-radius:8px;background:#E0F8F3;color:#00B894;font-size:12px;font-weight:600;text-decoration:none;">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -469,8 +473,8 @@ function EventListItem({ event, isActive, onClick }: { event: Event; isActive: b
             )}
           </div>
           <div className="mt-auto pt-2 flex items-center gap-1.5 justify-end">
-            {event.ticketUrl ? (
-              <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+            {safeUrl(event.ticketUrl) ? (
+              <a href={safeUrl(event.ticketUrl)!} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
                 className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
                 style={{ color: "#00B894", backgroundColor: "#E0F8F3" }}>
                 <Ticket size={11} />티켓
@@ -481,8 +485,8 @@ function EventListItem({ event, isActive, onClick }: { event: Event; isActive: b
                 <Ticket size={11} />티켓
               </span>
             )}
-            {event.website ? (
-              <a href={event.website} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+            {safeUrl(event.website) ? (
+              <a href={safeUrl(event.website)!} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
                 className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
                 style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}>
                 <ExternalLink size={11} />홈페이지
@@ -514,6 +518,7 @@ function LeafletMap({ events, selectedEvent, onSelect }: {
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
+    const markers = markersRef.current; // capture ref value for cleanup
     let cancelled = false;
     import("leaflet").then(L => {
       if (cancelled || mapRef.current || !containerRef.current) return;
@@ -529,7 +534,7 @@ function LeafletMap({ events, selectedEvent, onSelect }: {
       cancelled = true;
       mapRef.current?.remove();
       mapRef.current = null;
-      markersRef.current.clear();
+      markers.clear();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -579,11 +584,10 @@ function LeafletMap({ events, selectedEvent, onSelect }: {
       }
       prevSelectedRef.current = selectedEvent;
     });
-  }, [isMapReady, selectedEvent]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isMapReady, selectedEvent]);
 
   return (
     <>
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
       <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
     </>
   );
@@ -718,7 +722,10 @@ export default function FeaturedClient({ allEvents }: { allEvents: Event[] }) {
 
   const views: ViewMode[] = ["My Events", "My 캘린더", "My 맵"];
 
-  const starredEvents = ready ? allEvents.filter(e => isStarred(e.id)) : [];
+  const starredEvents = useMemo(
+    () => (ready ? allEvents.filter(e => isStarred(e.id)) : []),
+    [ready, allEvents, isStarred]
+  );
 
   const categoryFilteredEvents = useMemo(() =>
     activeCategory === "all"
@@ -729,8 +736,8 @@ export default function FeaturedClient({ allEvents }: { allEvents: Event[] }) {
 
   // 실제로 별표된 이벤트가 있는 카테고리만 표시
   const activeCategories = useMemo(() => {
-    const cats = new Set(starredEvents.map(e => e.category));
-    return ["all", ...Object.keys(CATEGORY_META).filter(k => k !== "all" && cats.has(k as never))];
+    const cats = new Set<string>(starredEvents.map(e => e.category));
+    return ["all", ...Object.keys(CATEGORY_META).filter(k => k !== "all" && cats.has(k))];
   }, [starredEvents]);
 
   // 맵 뷰는 자체 레이아웃(좌측 패널)에 드롭다운이 있으므로 여기서 바로 렌더링
