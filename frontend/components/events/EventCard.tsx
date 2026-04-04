@@ -3,6 +3,7 @@ import CategoryBadge from "./CategoryBadge";
 import { CATEGORY_META, STATE_META } from "@/lib/mock-data";
 import { Ticket, ExternalLink } from "lucide-react";
 import StarButton from "@/components/featured/StarButton";
+import { safeUrl } from "@/lib/utils/url";
 
 type Props = {
   event: Event;
@@ -27,8 +28,8 @@ function formatDate(dateStr: string): string {
 function ActionButtons({ website, ticketUrl }: { website?: string; ticketUrl?: string }) {
   return (
     <div className="flex items-center gap-1.5 ml-auto">
-      {ticketUrl ? (
-        <a href={ticketUrl} target="_blank" rel="noopener noreferrer"
+      {safeUrl(ticketUrl) ? (
+        <a href={safeUrl(ticketUrl)!} target="_blank" rel="noopener noreferrer"
           className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
           style={{ color: "#00B894", backgroundColor: "#E0F8F3" }}>
           <Ticket size={11} />티켓
@@ -39,8 +40,8 @@ function ActionButtons({ website, ticketUrl }: { website?: string; ticketUrl?: s
           <Ticket size={11} />티켓
         </span>
       )}
-      {website ? (
-        <a href={website} target="_blank" rel="noopener noreferrer"
+      {safeUrl(website) ? (
+        <a href={safeUrl(website)!} target="_blank" rel="noopener noreferrer"
           className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
           style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}>
           <ExternalLink size={11} />홈페이지

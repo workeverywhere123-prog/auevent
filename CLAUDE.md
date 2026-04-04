@@ -88,45 +88,38 @@ Table: `events` — key column ↔ type mapping:
 
 ### Known Issues and Security Notes
 
-**[FIXED] Previously dead code — removed:**
+**[FIXED] Previously dead code — removed (2026-04-04):**
 - `MOCK_EVENTS`, `getEventsByMonth/Category/State`, `getFeaturedEvents` from `lib/mock-data.ts`
 - `FilterState` type from `lib/types.ts`
 - DB row → Event mapping duplicated in two files → now in `lib/api/mappers.ts`
 
-**[FIXED] Previously broken UI — fixed:**
+**[FIXED] All issues resolved before feature development (2026-04-04):**
 - `/about` page created (`app/about/page.tsx`)
 - Dashboard "Explore Events" `<div>` → `<Link>`
 - `CalendarClient` redundant mount fetch (uses `mountedRef` to skip first render)
 - `fetchEvents()` no longer forces `startDate` to today
+- XSS in Leaflet popups — `escapeHtml()` in `lib/utils/html.ts`, imported by both `MapPageClient` and `FeaturedClient`
+- URL injection — `safeUrl()` in `lib/utils/url.ts`, applied to all `<a href>` across `EventCard`, `CalendarClient`, `MapPageClient`, `FeaturedClient`
+- Leaflet CSS moved from inline JSX `<link>` to `app/globals.css` `@import` (eliminates FOUC)
+- `isNaN(month)` + year range validation in `app/api/events/route.ts`
+- `app/events/page.tsx` — category/state params validated against allowlist before `fetchEvents()`
+- `mapRowToEvent` — required field guard (`id`, `title`, `date`, `state`) + `?? ""` fallbacks
+- `FeaturedClient` `cats.has(k as never)` → `Set<string>` type fix
+- `CalendarClient` `fetchMonth` — `catch` block added, network errors set `fetchError`
 
 **Remaining UI (decorative only — not yet implemented):**
 - Header search box — no `onChange` handler
 - Header Bell icon — no functionality
 
-**[SECURITY — MEDIUM] XSS surface in Leaflet popups:**
-- `makePopupHtml()` in both `MapPageClient.tsx` and `FeaturedClient.tsx` interpolates DB strings (`event.title`, `event.location.venue`, etc.) directly into HTML set via Leaflet's `innerHTML`-based `bindPopup()`. React escaping does not apply here.
-- Current risk is low (data comes from Ticketmaster sync only), but any future user-submitted content or manual DB edit could be exploited.
-- Fix: add `escapeHtml()` helper and apply to all interpolated strings; validate `ticketUrl`/`website` start with `https://`
+**[NOTE] `contexts/StarredContext.tsx` — `Promise.resolve().then()` wrapper is intentional:**
+- `react-hooks/set-state-in-effect` lint rule forbids synchronous `setState` inside an effect body. The `Promise.resolve().then()` wrapper is required to satisfy this rule. Do not remove it.
 
-**[BUG] `app/api/events/route.ts` — `isNaN(month)` validation broken:**
-- `Number(null) === 0`, so missing `?month=` param silently queries January. Use `searchParams.has()` presence check before coercing to number.
+**[NOTE] `app/api/events/route.ts` — uses public `supabase` client (anon key) intentionally:**
+- Honours RLS read policies. Comment in file explains the decision. If RLS is tightened, switch to `supabaseAdmin`.
 
-**[BUG] `lib/api/mappers.ts` — no runtime validation:**
-- `mapRowToEvent` uses bare type casts (`as string`). If Supabase returns `null` for required fields, downstream `event.title.toLowerCase()` etc. will throw at runtime. Add a guard for required fields (`id`, `title`, `date`).
-
-**[MINOR] `contexts/StarredContext.tsx` — unnecessary `Promise.resolve().then()` wrapper:**
-- `useEffect` already guarantees client-only post-mount execution. The wrapper is redundant and confusing. Can safely replace with a plain effect body.
-
-**[MINOR] `app/api/events/route.ts` — uses public `supabase` client (anon key), not `supabaseAdmin`:**
-- Works while RLS allows anon reads, but inconsistent with the sync route. If RLS is ever tightened, this route silently returns empty results.
-
-**[MINOR] `components/featured/FeaturedClient.tsx` line ~737 — type hack:**
-- `cats.has(k as never)` — fix by typing `cats` as `Set<string>`.
-
-**Logic still duplicated across files (no shared utility yet):**
+**Logic still duplicated across files (tracked for future refactor):**
 - `formatDate()`, `mapsUrl()`, `buildCalendarDays()`, `getEventsForDate()`, `isSameDay()` — in `EventCard`, `CalendarClient`, `MapPageClient`, `FeaturedClient`
-- `makeIcon()`, `makePopupHtml()` (Leaflet) — in `MapPageClient` and `FeaturedClient` (if fixing XSS, must apply to **both**)
-- Full `CalendarView`, `MapView`, `LeafletMap`, `EventListItem`, `DayEventCard` sub-components copy-pasted in `FeaturedClient.tsx`
+- `makeIcon()`, `makePopupHtml()`, `LeafletMap`, `CalendarView`, `MapView`, `EventListItem`, `DayEventCard` — copy-pasted between `MapPageClient`/`CalendarClient` and `FeaturedClient`
 
 ### Environment Variables
 

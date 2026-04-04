@@ -5,6 +5,8 @@ import { Search, MapPin, Clock, X, ChevronDown, ChevronUp, ExternalLink, Ticket 
 import StarButton from "@/components/featured/StarButton";
 import type { Event } from "@/lib/types";
 import { CATEGORY_META as CATEGORY_META_SOURCE } from "@/lib/mock-data";
+import { safeUrl } from "@/lib/utils/url";
+import { escapeHtml } from "@/lib/utils/html";
 
 // ─── 상수 ────────────────────────────────────────────────────────────────────
 
@@ -183,8 +185,8 @@ function EventListItem({ event, isActive, onClick }: {
           </div>
           {/* 홈페이지 + 티켓 버튼 — 오른쪽 맨 하단 */}
           <div className="mt-auto pt-2 flex items-center gap-1.5 justify-end">
-            {event.ticketUrl ? (
-              <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer"
+            {safeUrl(event.ticketUrl) ? (
+              <a href={safeUrl(event.ticketUrl)!} target="_blank" rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
                 style={{ color: "#00B894", backgroundColor: "#E0F8F3" }}>
@@ -196,8 +198,8 @@ function EventListItem({ event, isActive, onClick }: {
                 <Ticket size={11} />티켓
               </span>
             )}
-            {event.website ? (
-              <a href={event.website} target="_blank" rel="noopener noreferrer"
+            {safeUrl(event.website) ? (
+              <a href={safeUrl(event.website)!} target="_blank" rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
                 style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}>
@@ -253,29 +255,31 @@ function makePopupHtml(event: Event, color: string): string {
   const stateColor = STATE_META[event.location.state]?.color ?? "#8898AA";
   const stateLabel = STATE_META[event.location.state]?.label ?? event.location.state;
   const stateBg    = `${stateColor}18`;
+  const safeTicketUrl = event.ticketUrl?.startsWith("https://") ? event.ticketUrl : null;
+  const safeWebsite   = event.website?.startsWith("https://")   ? event.website   : null;
   return `
     <div style="min-width:210px;max-width:260px;font-family:system-ui,-apple-system,sans-serif;padding:2px 0">
       <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px">
         <span style="width:8px;height:8px;border-radius:50%;background:${color};
           flex-shrink:0;margin-top:4px;display:inline-block"></span>
-        <span style="font-weight:600;font-size:13px;color:#2C3E50;line-height:1.4">${event.title}</span>
+        <span style="font-weight:600;font-size:13px;color:#2C3E50;line-height:1.4">${escapeHtml(event.title)}</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap">
         <span style="display:inline-block;font-size:11px;font-weight:600;
           padding:2px 8px;border-radius:20px;
           background:${catBg};color:${color}">
-          ${catLabel}
+          ${escapeHtml(catLabel)}
         </span>
         <span style="display:inline-block;font-size:11px;font-weight:600;
           padding:2px 8px;border-radius:20px;
           background:${stateBg};color:${stateColor}">
-          ${stateLabel}
+          ${escapeHtml(stateLabel)}
         </span>
       </div>
       <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer"
         style="display:flex;align-items:center;gap:4px;font-size:12px;color:#0984E3;
           margin-bottom:3px;text-decoration:none;">
-        📍 ${event.location.venue}, ${event.location.city} ${event.location.state}
+        📍 ${escapeHtml(event.location.venue)}, ${escapeHtml(event.location.city)} ${escapeHtml(event.location.state)}
         <span style="font-size:10px;opacity:0.7">↗</span>
       </a>
       <div style="font-size:12px;color:#8898AA;margin-bottom:6px">
@@ -288,8 +292,8 @@ function makePopupHtml(event: Event, color: string): string {
         ${priceText}
       </div>
       <div style="display:flex;gap:6px">
-        ${event.website
-          ? `<a href="${event.website}" target="_blank" rel="noopener noreferrer"
+        ${safeWebsite
+          ? `<a href="${safeWebsite}" target="_blank" rel="noopener noreferrer"
               style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
                 padding:7px 10px;border-radius:8px;background:#FFF0EF;
                 color:#FF6B6B;font-size:12px;font-weight:600;text-decoration:none;">
@@ -311,8 +315,8 @@ function makePopupHtml(event: Event, color: string): string {
               홈페이지
             </span>`
         }
-        ${event.ticketUrl
-          ? `<a href="${event.ticketUrl}" target="_blank" rel="noopener noreferrer"
+        ${safeTicketUrl
+          ? `<a href="${safeTicketUrl}" target="_blank" rel="noopener noreferrer"
               style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
                 padding:7px 10px;border-radius:8px;background:#E0F8F3;
                 color:#00B894;font-size:12px;font-weight:600;text-decoration:none;">
@@ -464,7 +468,6 @@ function LeafletMap({ events, selectedEvent, onSelect, activeState }: {
 
   return (
     <>
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
       <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
     </>
   );

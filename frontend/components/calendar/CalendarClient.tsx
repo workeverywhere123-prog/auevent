@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, Ticket, ExternalLink, X } from "lucide-react
 import StarButton from "@/components/featured/StarButton";
 import { CATEGORY_META, STATE_META } from "@/lib/mock-data";
 import type { Event } from "@/lib/types";
+import { safeUrl } from "@/lib/utils/url";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -143,8 +144,8 @@ function DayEventCard({ event }: { event: Event }) {
             </span>
           )}
           <div className="flex items-center gap-1.5 ml-auto">
-            {event.ticketUrl ? (
-              <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer"
+            {safeUrl(event.ticketUrl) ? (
+              <a href={safeUrl(event.ticketUrl)!} target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
                 style={{ color: "#00B894", backgroundColor: "#E0F8F3" }}>
                 <Ticket size={11} />티켓
@@ -155,8 +156,8 @@ function DayEventCard({ event }: { event: Event }) {
                 <Ticket size={11} />티켓
               </span>
             )}
-            {event.website ? (
-              <a href={event.website} target="_blank" rel="noopener noreferrer"
+            {safeUrl(event.website) ? (
+              <a href={safeUrl(event.website)!} target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
                 style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}>
                 <ExternalLink size={11} />홈페이지
@@ -184,6 +185,7 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
   const [selected, setSelected] = useState<Date | null>(null);
   const [events, setEvents]     = useState<Event[]>(initialEvents);
   const [loading, setLoading]   = useState(false);
+  const [fetchError, setFetchError] = useState(false);
   const [dateInput, setDateInput] = useState("");
   const dayPanelRef = useRef<HTMLDivElement>(null);
   const mountedRef  = useRef(false);
@@ -208,7 +210,14 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
         state: s,
       });
       const res = await fetch(`/api/events?${params}`);
-      if (res.ok) setEvents(await res.json());
+      if (res.ok) {
+        setEvents(await res.json());
+        setFetchError(false);
+      } else {
+        setFetchError(true);
+      }
+    } catch {
+      setFetchError(true);
     } finally {
       setLoading(false);
     }
@@ -443,6 +452,12 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
           </div>
 
           <div className="mb-4" style={{ height: "1px", backgroundColor: "var(--border)" }} />
+
+          {fetchError && (
+            <p style={{ color: "var(--primary)", fontSize: "0.875rem", padding: "0.5rem 0" }}>
+              이벤트를 불러오지 못했습니다. 다시 시도해주세요.
+            </p>
+          )}
 
           {selectedEvents.length === 0 ? (
             <div className="rounded-2xl py-16 flex flex-col items-center gap-3" style={{ border: "1px solid var(--border)", backgroundColor: "var(--card-bg)" }}>

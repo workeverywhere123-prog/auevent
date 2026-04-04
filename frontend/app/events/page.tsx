@@ -9,10 +9,16 @@ type Props = {
   searchParams: Promise<{ category?: string; state?: string }>;
 };
 
-export default async function EventsPage({ searchParams }: Props) {
-  const { category = "all", state = "all" } = await searchParams;
+const VALID_CATEGORIES = new Set(["all","music","food","sports","arts","cultural","markets","comedy","film"]);
+const VALID_STATES     = new Set(["all","NSW","VIC","QLD","WA","SA","TAS","ACT","NT"]);
 
-  const filtered = await fetchEvents({ category, stateCode: state });
+export default async function EventsPage({ searchParams }: Props) {
+  const { category, state } = await searchParams;
+
+  const safeCategory = VALID_CATEGORIES.has(category ?? "") ? category : "all";
+  const safeState    = VALID_STATES.has(state ?? "")        ? state    : "all";
+
+  const filtered = await fetchEvents({ category: safeCategory, stateCode: safeState });
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -28,7 +34,7 @@ export default async function EventsPage({ searchParams }: Props) {
 
       {/* Filters */}
       <div className="flex items-center gap-4 flex-wrap mb-6">
-        <StateFilter current={state} />
+        <StateFilter current={safeState ?? "all"} />
 
         <div className="flex gap-2 flex-wrap">
         {CATEGORIES.map((cat) => {
