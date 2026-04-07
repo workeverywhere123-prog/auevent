@@ -1,15 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
+// Using the public anon client intentionally — this route honours RLS read policies.
+// If RLS is tightened to restrict anon reads, switch to supabaseAdmin here.
 import { supabase } from "@/lib/db/supabase";
-import type { Event } from "@/lib/types";
+import { mapRowToEvent } from "@/lib/api/mappers";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
-  const year     = Number(searchParams.get("year"));
-  const month    = Number(searchParams.get("month")); // 0-indexed
+  const rawYear  = searchParams.get("year");
+  const rawMonth = searchParams.get("month");
   const stateCode = searchParams.get("state") ?? "all";
 
-  if (!year || isNaN(month)) {
+  if (!rawYear || rawMonth === null) {
     return NextResponse.json({ error: "year and month are required" }, { status: 400 });
+  }
+
+  const year  = Number(rawYear);
+  const month = Number(rawMonth); // 0-indexed
+
+  if (!Number.isInteger(year) || year < 2000 || year > 2100 ||
+      !Number.isInteger(month) || month < 0 || month > 11) {
+    return NextResponse.json({ error: "Invalid year or month" }, { status: 400 });
   }
 
   const startDate = `${year}-${String(month + 1).padStart(2, "0")}-01`;
@@ -33,29 +43,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Map DB rows → Event type
-  const events: Event[] = (data ?? []).map((row) => ({
-    id:          row.id,
-    title:       row.title,
-    description: row.description,
-    date:        row.date,
-    endDate:     row.end_date ?? undefined,
-    time:        row.time,
-    location: {
-      venue: row.venue_name,
-      city:  row.city,
-      state: row.state,
-      lat:   row.lat,
-      lng:   row.lng,
-    },
-    category:  row.category,
-    tags:      row.tags ?? [],
-    price:     row.price ?? null,
-    featured:  row.featured,
-    image:     row.image_url ?? undefined,
-    ticketUrl: row.ticket_url ?? undefined,
-    website:   row.website ?? undefined,
-  }));
+  const events = (data ?? []).map(mapRowToEvent);
 
   return NextResponse.json(events);
 }

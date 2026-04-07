@@ -40,11 +40,3 @@ export type Event = {
   ticketUrl?: string;
   website?: string;
 };
-
-export type FilterState = {
-  category: EventCategory | "all";
-  state: AustralianState | "all";
-  dateFrom: string | null;
-  dateTo: string | null;
-  freeOnly: boolean;
-};
