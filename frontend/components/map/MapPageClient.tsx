@@ -281,7 +281,13 @@ function LeafletMap({ events, selectedEvent, onSelect, activeState }: {
         maxZoom: 20,
       }).addTo(map);
       map.on("click", () => onSelect(null));
+      // 컨테이너 크기가 확정된 뒤 타일 재계산 (invalidateSize 없으면 왼쪽 절반이 빈칸으로 나옴)
+      setTimeout(() => map.invalidateSize(), 50);
       setIsMapReady(true);
+
+      // 컨테이너 크기 변화 감지 → 자동 재계산
+      const ro = new ResizeObserver(() => map.invalidateSize());
+      if (containerRef.current) ro.observe(containerRef.current);
     });
     return () => {
       cancelled = true;
@@ -417,9 +423,7 @@ function LeafletMap({ events, selectedEvent, onSelect, activeState }: {
   }, [isMapReady, activeState]);
 
   return (
-    <>
-      <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
-    </>
+    <div ref={containerRef} style={{ position: "absolute", inset: 0 }} />
   );
 }
 
@@ -768,7 +772,7 @@ export default function MapPageClient({ events }: { events: Event[] }) {
       </div>
 
       {/* ── 우측 지도 ── */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative" style={{ overflow: "hidden" }}>
         <LeafletMap
           events={filtered}
           selectedEvent={selectedEvent}
