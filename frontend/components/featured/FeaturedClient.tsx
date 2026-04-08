@@ -81,86 +81,6 @@ function getEventsForDate(events: Event[], date: Date): Event[] {
   });
 }
 
-// CalendarClient의 DayEventCard와 동일
-function DayEventCard({ event }: { event: Event }) {
-  const meta = CATEGORY_META[event.category];
-  return (
-    <div className="rounded-xl overflow-hidden transition-shadow hover:shadow-md"
-      style={{ border: "1px solid var(--border)", backgroundColor: "var(--card-bg)" }}>
-      <div className="h-1.5" style={{ backgroundColor: meta.color }} />
-      <div className="p-4 flex flex-col h-full">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="font-semibold text-sm leading-snug flex-1" style={{ color: "var(--text)" }}>
-            {event.title}
-          </h3>
-          <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
-            <StarButton eventId={event.id} />
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-              style={{ backgroundColor: meta.bg, color: meta.color }}>{meta.label}</span>
-            {event.location.state && STATE_META[event.location.state] && (
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                style={{ color: STATE_META[event.location.state].color, backgroundColor: `${STATE_META[event.location.state].color}18` }}>
-                {STATE_META[event.location.state].label}
-              </span>
-            )}
-          </div>
-        </div>
-        <p className="text-xs line-clamp-2 mb-3" style={{ color: "var(--text-muted)" }}>{event.description}</p>
-        <div className="flex flex-col gap-1.5">
-          <div className="text-xs" style={{ color: "#8898AA" }}>
-            🗓 {formatDate(event.date)}
-            {event.endDate && event.endDate !== event.date ? ` — ${formatDate(event.endDate)}` : ""}
-            {" · "}{event.time}
-          </div>
-          <a href={mapsUrl(event)} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1 text-xs" style={{ color: "#0984E3", textDecoration: "none" }}>
-            📍 <span className="truncate">{event.location.venue}, {event.location.city}, {event.location.state}</span>
-            <span style={{ fontSize: 10, opacity: 0.7, flexShrink: 0 }}>↗</span>
-          </a>
-          <div className="flex items-center gap-1.5">
-            <Ticket size={12} style={{ color: "var(--text-muted)" }} />
-            <span className="text-xs font-semibold"
-              style={{ color: event.price === null ? "#55EFC4" : "var(--text-muted)" }}>
-              {event.price === null ? "Free" : `A$${event.price}`}
-            </span>
-          </div>
-        </div>
-        <div className="mt-auto pt-3 flex items-center justify-between gap-2">
-          {event.featured && (
-            <span className="text-[10px] font-medium px-2 py-1 rounded-full"
-              style={{ color: "#FF9F43", backgroundColor: "#FFF4E6" }}>★ Featured</span>
-          )}
-          <div className="flex items-center gap-1.5 ml-auto">
-            {safeUrl(event.ticketUrl) ? (
-              <a href={safeUrl(event.ticketUrl)!} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
-                style={{ color: "#00B894", backgroundColor: "#E0F8F3" }}>
-                <Ticket size={11} />티켓
-              </a>
-            ) : (
-              <span className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full cursor-not-allowed"
-                style={{ color: "#C0C0C0", backgroundColor: "#F4F6F8" }}>
-                <Ticket size={11} />티켓
-              </span>
-            )}
-            {safeUrl(event.website) ? (
-              <a href={safeUrl(event.website)!} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
-                style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}>
-                <ExternalLink size={11} />홈페이지
-              </a>
-            ) : (
-              <span className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full cursor-not-allowed"
-                style={{ color: "#C0C0C0", backgroundColor: "#F4F6F8" }}>
-                <ExternalLink size={11} />홈페이지
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function CalendarView({ events }: { events: Event[] }) {
   const today = new Date();
@@ -327,7 +247,7 @@ function CalendarView({ events }: { events: Event[] }) {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {selectedEvents.map(ev => <DayEventCard key={ev.id} event={ev} />)}
+              {selectedEvents.map(ev => <EventCard key={ev.id} event={ev} />)}
             </div>
           )}
         </div>

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Search, MapPin, Clock, X, ChevronDown, ChevronUp, ExternalLink, Ticket } from "lucide-react";
 import StarButton from "@/components/featured/StarButton";
+import EventCard from "@/components/events/EventCard";
 import type { Event } from "@/lib/types";
 import { CATEGORY_META as CATEGORY_META_SOURCE } from "@/lib/mock-data";
 import { safeUrl } from "@/lib/utils/url";
-import { escapeHtml } from "@/lib/utils/html";
 
 // ─── 상수 ────────────────────────────────────────────────────────────────────
 
@@ -245,102 +246,6 @@ function makeIcon(L: any, color: string, selected: boolean) {
   });
 }
 
-function makePopupHtml(event: Event, color: string): string {
-  const priceText = event.price === null ? "Free" : `A$${event.price}`;
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    `${event.location.venue}, ${event.location.city} ${event.location.state} Australia`
-  )}`;
-  const catLabel   = CATEGORY_META[event.category]?.label ?? event.category;
-  const catBg      = CATEGORY_META[event.category]?.bg    ?? "#F4F6F8";
-  const stateColor = STATE_META[event.location.state]?.color ?? "#8898AA";
-  const stateLabel = STATE_META[event.location.state]?.label ?? event.location.state;
-  const stateBg    = `${stateColor}18`;
-  const safeTicketUrl = event.ticketUrl?.startsWith("https://") ? event.ticketUrl : null;
-  const safeWebsite   = event.website?.startsWith("https://")   ? event.website   : null;
-  return `
-    <div style="min-width:210px;max-width:260px;font-family:system-ui,-apple-system,sans-serif;padding:2px 0">
-      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px">
-        <span style="width:8px;height:8px;border-radius:50%;background:${color};
-          flex-shrink:0;margin-top:4px;display:inline-block"></span>
-        <span style="font-weight:600;font-size:13px;color:#2C3E50;line-height:1.4">${escapeHtml(event.title)}</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap">
-        <span style="display:inline-block;font-size:11px;font-weight:600;
-          padding:2px 8px;border-radius:20px;
-          background:${catBg};color:${color}">
-          ${escapeHtml(catLabel)}
-        </span>
-        <span style="display:inline-block;font-size:11px;font-weight:600;
-          padding:2px 8px;border-radius:20px;
-          background:${stateBg};color:${stateColor}">
-          ${escapeHtml(stateLabel)}
-        </span>
-      </div>
-      <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer"
-        style="display:flex;align-items:center;gap:4px;font-size:12px;color:#0984E3;
-          margin-bottom:3px;text-decoration:none;">
-        📍 ${escapeHtml(event.location.venue)}, ${escapeHtml(event.location.city)} ${escapeHtml(event.location.state)}
-        <span style="font-size:10px;opacity:0.7">↗</span>
-      </a>
-      <div style="font-size:12px;color:#8898AA;margin-bottom:6px">
-        🗓 ${formatDate(event.date)}${event.time ? ` · ${event.time}` : ""}
-      </div>
-      <div style="display:inline-block;font-size:12px;font-weight:600;
-        padding:2px 8px;border-radius:20px;margin-bottom:10px;
-        background:${event.price === null ? "#E0F8F3" : "#FFF5F4"};
-        color:${event.price === null ? "#00B894" : "#FF6B6B"}">
-        ${priceText}
-      </div>
-      <div style="display:flex;gap:6px">
-        ${safeWebsite
-          ? `<a href="${safeWebsite}" target="_blank" rel="noopener noreferrer"
-              style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
-                padding:7px 10px;border-radius:8px;background:#FFF0EF;
-                color:#FF6B6B;font-size:12px;font-weight:600;text-decoration:none;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
-              </svg>
-              홈페이지
-            </a>`
-          : `<span style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
-              padding:7px 10px;border-radius:8px;background:#F4F6F8;
-              color:#C0C0C0;font-size:12px;font-weight:600;cursor:not-allowed;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
-              </svg>
-              홈페이지
-            </span>`
-        }
-        ${safeTicketUrl
-          ? `<a href="${safeTicketUrl}" target="_blank" rel="noopener noreferrer"
-              style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
-                padding:7px 10px;border-radius:8px;background:#E0F8F3;
-                color:#00B894;font-size:12px;font-weight:600;text-decoration:none;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
-                <path d="M13 5v2M13 17v2M13 11v2"/>
-              </svg>
-              티켓
-            </a>`
-          : `<span style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
-              padding:7px 10px;border-radius:8px;background:#F4F6F8;
-              color:#C0C0C0;font-size:12px;font-weight:600;cursor:not-allowed;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
-                <path d="M13 5v2M13 17v2M13 11v2"/>
-              </svg>
-              티켓
-            </span>`
-        }
-      </div>
-    </div>`;
-}
 
 // ─── LeafletMap ──────────────────────────────────────────────────────────────
 
@@ -350,11 +255,13 @@ function LeafletMap({ events, selectedEvent, onSelect, activeState }: {
   onSelect: (e: Event | null) => void;
   activeState: string;
 }) {
-  const containerRef   = useRef<HTMLDivElement>(null);
+  const containerRef    = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mapRef         = useRef<any>(null);
+  const mapRef          = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const markersRef     = useRef<Map<string, any>>(new Map());
+  const markersRef      = useRef<Map<string, any>>(new Map());
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const highlightCircle = useRef<any>(null);
   const prevSelectedRef = useRef<Event | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
 
@@ -398,8 +305,8 @@ function LeafletMap({ events, selectedEvent, onSelect, activeState }: {
         if (!lat || !lng) return;
         const color  = CATEGORY_COLORS[event.category] ?? "#FF6B6B";
         const marker = L.marker([lat, lng], { icon: makeIcon(L, color, false) });
-        marker.bindPopup(makePopupHtml(event, color), { maxWidth: 280 });
-        marker.on("click", () => onSelect(event));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        marker.on("click", (e: any) => { L.DomEvent.stop(e); onSelect(event); });
         marker.addTo(map);
         // Leaflet이 동적으로 추가하는 기본 border/background 강제 제거
         marker.on("add", () => {
@@ -430,14 +337,17 @@ function LeafletMap({ events, selectedEvent, onSelect, activeState }: {
   useEffect(() => {
     if (!isMapReady || !mapRef.current) return;
     import("leaflet").then((L) => {
-      // 이전 선택 마커 원래 크기로 복원
+      // 이전 선택 마커 원래 크기로 복원 + 강조 원 제거
       if (prevSelectedRef.current) {
         const prev = markersRef.current.get(prevSelectedRef.current.id);
         if (prev) {
           const c = CATEGORY_COLORS[prevSelectedRef.current.category] ?? "#FF6B6B";
           prev.setIcon(makeIcon(L, c, false));
-          prev.closePopup();
         }
+      }
+      if (highlightCircle.current) {
+        highlightCircle.current.remove();
+        highlightCircle.current = null;
       }
 
       if (selectedEvent?.location.lat && selectedEvent?.location.lng) {
@@ -445,13 +355,53 @@ function LeafletMap({ events, selectedEvent, onSelect, activeState }: {
         if (curr) {
           const c = CATEGORY_COLORS[selectedEvent.category] ?? "#FF6B6B";
           curr.setIcon(makeIcon(L, c, true));
-          mapRef.current.flyTo(
+
+          // 마커 위에 동그라미 강조 (고정 픽셀 크기, 지역 색깔)
+          highlightCircle.current = L.circleMarker(
             [selectedEvent.location.lat, selectedEvent.location.lng],
-            13,
-            { duration: 0.8 }
-          );
-          // flyTo 애니메이션 후 팝업 오픈
-          mapRef.current.once("moveend", () => curr.openPopup());
+            {
+              radius: 22,
+              color: c,
+              weight: 2.5,
+              fillColor: c,
+              fillOpacity: 0.18,
+              interactive: false,
+            }
+          ).addTo(mapRef.current);
+
+          // strip tip 위치를 계산하여 마커가 tip 오른쪽 GAP px 위치에 오도록
+          // flyTo center를 offset — panBy 없이 한 번의 애니메이션으로 정확하게 정렬
+          if (containerRef.current) {
+            const rect = containerRef.current.getBoundingClientRect();
+            const zoom = 16;
+            const lat  = selectedEvent.location.lat;
+            const lng  = selectedEvent.location.lng;
+            const markerPt = mapRef.current.project([lat, lng], zoom);
+
+            // 맵 캔버스 중심 (screen 좌표)
+            const mapCX = rect.left + rect.width  / 2;
+            const mapCY = rect.top  + rect.height / 2;
+
+            // strip tip screen 좌표
+            const modalHalfW = Math.min(230, window.innerWidth * 0.46);
+            const tipX = window.innerWidth  / 2 + modalHalfW + 6 + 64;
+            const tipY = window.innerHeight / 2;
+
+            // 마커가 tip 오른쪽 GAP px에 오려면 center를 이만큼 offset
+            const GAP = 32;
+            const offsetX = (tipX + GAP) - mapCX;
+            const offsetY = tipY - mapCY;
+
+            const centerPt = L.point(markerPt.x - offsetX, markerPt.y - offsetY);
+            const centerLatLng = mapRef.current.unproject(centerPt, zoom);
+            mapRef.current.flyTo(centerLatLng, zoom, { duration: 0.8 });
+          } else {
+            mapRef.current.flyTo(
+              [selectedEvent.location.lat, selectedEvent.location.lng],
+              16,
+              { duration: 0.8 }
+            );
+          }
         }
       }
 
@@ -470,6 +420,130 @@ function LeafletMap({ events, selectedEvent, onSelect, activeState }: {
     <>
       <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
     </>
+  );
+}
+
+// ─── EventModal ──────────────────────────────────────────────────────────────
+
+function EventModal({ event, onClose }: { event: Event; onClose: () => void }) {
+  const meta      = CATEGORY_META[event.category];
+  const stateInfo = STATE_META[event.location.state];
+  const venueName = event.location.venue.length > 22
+    ? event.location.city
+    : event.location.venue;
+
+  const STRIP_W = 64;
+  const STRIP_H = Math.min(320, window.innerHeight * 0.56);
+
+  return createPortal(
+    <>
+      <div
+        className="fixed inset-0"
+        style={{ backgroundColor: "rgba(0,0,0,0.35)", zIndex: 9998 }}
+        onClick={onClose}
+      />
+
+      {/* Main modal */}
+      <div
+        className="fixed rounded-2xl flex flex-col overflow-hidden"
+        style={{
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "min(460px, 92vw)",
+          maxHeight: "88vh",
+          zIndex: 9999,
+          boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
+          border: "1px solid var(--border)",
+          backgroundColor: "var(--card-bg)",
+        }}
+      >
+        {/* Header */}
+        <div
+          className="flex items-center justify-between px-5 py-3 shrink-0"
+          style={{ borderBottom: "1px solid var(--border)" }}
+        >
+          <p className="text-sm font-semibold" style={{ color: "var(--text)" }}>Event Details</p>
+          <button
+            onClick={onClose}
+            className="w-7 h-7 rounded-full flex items-center justify-center transition-colors hover:bg-gray-100"
+            style={{ border: "1px solid var(--border)", color: "var(--text-muted)" }}
+          >
+            <X size={13} />
+          </button>
+        </div>
+        <div className="overflow-y-auto">
+          <EventCard event={event} />
+        </div>
+      </div>
+
+      {/* Arrow strip — fixed position, map pans so Leaflet pin aligns with tip */}
+      <div
+        style={{
+          position: "fixed",
+          left: `calc(50% + min(230px, 46vw) + 6px)`,
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: STRIP_W,
+          height: STRIP_H,
+          zIndex: 9999,
+          /* right-pointing arrow: top-left + bottom-left rounded, right = point */
+          clipPath: "polygon(0 5%, 5% 0, 68% 0, 100% 50%, 68% 100%, 5% 100%, 0 95%)",
+          background: `linear-gradient(160deg, ${meta.color} 0%, ${meta.color}BB 100%)`,
+          boxShadow: `6px 0 28px ${meta.color}66, 0 4px 16px rgba(0,0,0,0.18)`,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+          paddingTop: 20,
+          paddingBottom: 20,
+          /* shift content left so it stays inside the non-pointed area */
+          paddingRight: 18,
+        }}
+      >
+        {/* Pin icon */}
+        <MapPin size={17} color="white" strokeWidth={2.5} style={{ flexShrink: 0 }} />
+
+        {/* Thin divider line */}
+        <div style={{ width: 1.5, height: 14, backgroundColor: "rgba(255,255,255,0.3)", borderRadius: 1, flexShrink: 0 }} />
+
+        {/* Venue / city name — rotated */}
+        <div style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+          <span style={{
+            writingMode: "vertical-rl",
+            textOrientation: "mixed",
+            color: "white",
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: "0.07em",
+            textTransform: "uppercase",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxHeight: "100%",
+          }}>
+            {venueName}
+          </span>
+        </div>
+
+        {/* Thin divider line */}
+        <div style={{ width: 1.5, height: 14, backgroundColor: "rgba(255,255,255,0.3)", borderRadius: 1, flexShrink: 0 }} />
+
+        {/* State label — rotated */}
+        <span style={{
+          writingMode: "vertical-rl",
+          color: "white",
+          fontSize: 10,
+          fontWeight: 800,
+          letterSpacing: "0.1em",
+          opacity: 0.88,
+          flexShrink: 0,
+        }}>
+          {stateInfo?.label ?? event.location.state}
+        </span>
+      </div>
+    </>,
+    document.body,
   );
 }
 
@@ -702,6 +776,11 @@ export default function MapPageClient({ events }: { events: Event[] }) {
           activeState={activeState}
         />
       </div>
+
+      {/* ── 이벤트 모달 ── */}
+      {selectedEvent && (
+        <EventModal event={selectedEvent} onClose={() => setSelected(null)} />
+      )}
     </div>
   );
 }

@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight, Ticket, ExternalLink, X } from "lucide-react";
-import StarButton from "@/components/featured/StarButton";
-import { CATEGORY_META, STATE_META } from "@/lib/mock-data";
+import { createPortal } from "react-dom";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import EventCard from "@/components/events/EventCard";
+import { CATEGORY_META } from "@/lib/mock-data";
 import type { Event } from "@/lib/types";
-import { safeUrl } from "@/lib/utils/url";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -67,111 +67,98 @@ function formatFullDate(date: Date) {
   });
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+// ─── Popup ────────────────────────────────────────────────────────────────────
 
-function DayEventCard({ event }: { event: Event }) {
-  const meta = CATEGORY_META[event.category];
-  return (
-    <div
-      className="rounded-xl overflow-hidden transition-shadow hover:shadow-md"
-      style={{ border: "1px solid var(--border)", backgroundColor: "var(--card-bg)" }}
-    >
-      <div className="h-1.5" style={{ backgroundColor: meta.color }} />
-      <div className="p-4 flex flex-col h-full">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="font-semibold text-sm leading-snug flex-1" style={{ color: "var(--text)" }}>
-            {event.title}
-          </h3>
-          <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
-            <StarButton eventId={event.id} />
-            <span
-              className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-              style={{ backgroundColor: meta.bg, color: meta.color }}
-            >
-              {meta.label}
-            </span>
-            {event.location.state && STATE_META[event.location.state] && (
-              <span
-                className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                style={{
-                  color: STATE_META[event.location.state].color,
-                  backgroundColor: `${STATE_META[event.location.state].color}18`,
-                }}
-              >
-                {STATE_META[event.location.state].label}
+function DayPopup({
+  date, events, fetchError, onClose, currentStateLabel, state,
+}: {
+  date: Date;
+  events: Event[];
+  fetchError: boolean;
+  onClose: () => void;
+  currentStateLabel: string;
+  state: string;
+}) {
+  return createPortal(
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 z-40"
+        style={{ backgroundColor: "rgba(0,0,0,0.35)" }}
+        onClick={onClose}
+      />
+
+      {/* Centered modal */}
+      <div
+        className="fixed z-50 rounded-2xl flex flex-col"
+        style={{
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "min(1100px, 95vw)",
+          maxHeight: "88vh",
+          border: "1px solid var(--border)",
+          backgroundColor: "var(--card-bg)",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Header */}
+        <div
+          className="flex items-center justify-between px-6 py-4 shrink-0"
+          style={{ borderBottom: "1px solid var(--border)" }}
+        >
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-0.5" style={{ color: "var(--text-muted)" }}>
+              Events on
+            </p>
+            <h2 className="text-xl font-bold" style={{ color: "var(--text)" }}>
+              {formatFullDate(date)}
+            </h2>
+          </div>
+          <div className="flex items-center gap-3">
+            {events.length > 0 && (
+              <span className="text-sm font-bold px-3 py-1 rounded-full" style={{ backgroundColor: "#FFF0EF", color: "var(--primary)" }}>
+                {events.length} event{events.length !== 1 ? "s" : ""}
               </span>
             )}
-          </div>
-        </div>
-
-        <p className="text-xs line-clamp-2 mb-3" style={{ color: "var(--text-muted)" }}>
-          {event.description}
-        </p>
-
-        <div className="flex flex-col gap-1.5">
-          <div className="text-xs" style={{ color: "#8898AA" }}>
-            🗓 {formatDate(event.date)}
-            {event.endDate && event.endDate !== event.date ? ` — ${formatDate(event.endDate)}` : ""}
-            {" · "}{event.time}
-          </div>
-          <a
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-              `${event.location.venue}, ${event.location.city} ${event.location.state} Australia`
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 text-xs"
-            style={{ color: "#0984E3", textDecoration: "none" }}
-          >
-            📍 <span className="truncate">{event.location.venue}, {event.location.city}, {event.location.state}</span>
-            <span style={{ fontSize: 10, opacity: 0.7, flexShrink: 0 }}>↗</span>
-          </a>
-          <div className="flex items-center gap-1.5">
-            <Ticket size={12} style={{ color: "var(--text-muted)" }} />
-            <span
-              className="text-xs font-semibold"
-              style={{ color: event.price === null ? "#55EFC4" : "var(--text-muted)" }}
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-gray-100"
+              style={{ border: "1px solid var(--border)", color: "var(--text-muted)" }}
             >
-              {event.price === null ? "Free" : `A$${event.price}`}
-            </span>
+              <X size={15} />
+            </button>
           </div>
         </div>
 
-        <div className="mt-auto pt-3 flex items-center justify-between gap-2">
-          {event.featured && (
-            <span className="text-[10px] font-medium px-2 py-1 rounded-full" style={{ color: "#FF9F43", backgroundColor: "#FFF4E6" }}>
-              ★ Featured
-            </span>
+        {/* Event cards */}
+        <div className="overflow-y-auto flex-1 p-6">
+          {fetchError && (
+            <p className="text-sm text-center py-2 mb-4" style={{ color: "var(--primary)" }}>
+              이벤트를 불러오지 못했습니다. 다시 시도해주세요.
+            </p>
           )}
-          <div className="flex items-center gap-1.5 ml-auto">
-            {safeUrl(event.ticketUrl) ? (
-              <a href={safeUrl(event.ticketUrl)!} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
-                style={{ color: "#00B894", backgroundColor: "#E0F8F3" }}>
-                <Ticket size={11} />티켓
-              </a>
-            ) : (
-              <span className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full cursor-not-allowed"
-                style={{ color: "#C0C0C0", backgroundColor: "#F4F6F8" }}>
-                <Ticket size={11} />티켓
-              </span>
-            )}
-            {safeUrl(event.website) ? (
-              <a href={safeUrl(event.website)!} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
-                style={{ color: "var(--primary)", backgroundColor: "#FFF0EF" }}>
-                <ExternalLink size={11} />홈페이지
-              </a>
-            ) : (
-              <span className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full cursor-not-allowed"
-                style={{ color: "#C0C0C0", backgroundColor: "#F4F6F8" }}>
-                <ExternalLink size={11} />홈페이지
-              </span>
-            )}
-          </div>
+
+          {events.length === 0 ? (
+            <div className="flex flex-col items-center gap-3 py-16">
+              <span className="text-5xl">📅</span>
+              <p className="text-base font-semibold" style={{ color: "var(--text)" }}>No events on this day</p>
+              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+                {state !== "all" ? `No events in ${currentStateLabel} on this date.` : "Try selecting a different date or region."}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {events.map((ev) => (
+                <EventCard key={ev.id} event={ev} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </>,
+    document.body,
   );
 }
 
@@ -183,22 +170,29 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
   const [month, setMonth]       = useState(today.getMonth());
   const [state, setState]       = useState("all");
   const [selected, setSelected] = useState<Date | null>(null);
+  const [popupRect, setPopupRect] = useState<DOMRect | null>(null);
   const [events, setEvents]     = useState<Event[]>(initialEvents);
   const [loading, setLoading]   = useState(false);
   const [fetchError, setFetchError] = useState(false);
   const [dateInput, setDateInput] = useState("");
-  const dayPanelRef = useRef<HTMLDivElement>(null);
-  const mountedRef  = useRef(false);
+  const mountedRef = useRef(false);
+
+  // Close popup on scroll
+  useEffect(() => {
+    const close = () => { setSelected(null); setPopupRect(null); };
+    window.addEventListener("scroll", close, { passive: true });
+    return () => window.removeEventListener("scroll", close);
+  }, []);
 
   const handleDateSearch = (value: string) => {
     setDateInput(value);
+    setSelected(null);
+    setPopupRect(null);
     if (!value) return;
     const parsed = new Date(value + "T00:00:00");
     if (isNaN(parsed.getTime())) return;
     setYear(parsed.getFullYear());
     setMonth(parsed.getMonth());
-    setSelected(parsed);
-    setTimeout(() => dayPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   };
 
   const fetchMonth = useCallback(async (y: number, m: number, s: string) => {
@@ -237,16 +231,23 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
     if (month === 0) { setMonth(11); setYear((y) => y - 1); }
     else setMonth((m) => m - 1);
     setSelected(null);
+    setPopupRect(null);
   };
   const nextMonth = () => {
     if (month === 11) { setMonth(0); setYear((y) => y + 1); }
     else setMonth((m) => m + 1);
     setSelected(null);
+    setPopupRect(null);
   };
 
-  const handleDayClick = (date: Date) => {
-    setSelected((prev) => (prev && isSameDay(prev, date) ? null : date));
-    setTimeout(() => dayPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  const handleDayClick = (date: Date, e: React.MouseEvent<HTMLDivElement>) => {
+    if (selected && isSameDay(selected, date)) {
+      setSelected(null);
+      setPopupRect(null);
+    } else {
+      setSelected(date);
+      setPopupRect(e.currentTarget.getBoundingClientRect());
+    }
   };
 
   const monthEventCount = cells
@@ -372,7 +373,7 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
             return (
               <div
                 key={idx}
-                onClick={() => date && handleDayClick(date)}
+                onClick={(e) => date && handleDayClick(date, e)}
                 className="min-h-[90px] p-2 flex flex-col gap-0 transition-colors"
                 style={{
                   borderRight:  colPos < 6 ? "1px solid var(--border)" : undefined,
@@ -423,58 +424,16 @@ export default function CalendarClient({ events: initialEvents }: { events: Even
         </div>
       </div>
 
-      {/* ── Day events panel ── */}
+      {/* ── Day popup ── */}
       {selected && (
-        <div ref={dayPanelRef} className="mt-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide mb-0.5" style={{ color: "var(--text-muted)" }}>
-                Events on
-              </p>
-              <h2 className="text-xl font-bold" style={{ color: "var(--text)" }}>
-                {formatFullDate(selected)}
-              </h2>
-            </div>
-            <div className="flex items-center gap-3">
-              {selectedEvents.length > 0 && (
-                <span className="text-sm font-bold px-3 py-1 rounded-full" style={{ backgroundColor: "#FFF0EF", color: "var(--primary)" }}>
-                  {selectedEvents.length} event{selectedEvents.length !== 1 ? "s" : ""}
-                </span>
-              )}
-              <button
-                onClick={() => setSelected(null)}
-                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-gray-100"
-                style={{ border: "1px solid var(--border)", color: "var(--text-muted)" }}
-              >
-                <X size={14} />
-              </button>
-            </div>
-          </div>
-
-          <div className="mb-4" style={{ height: "1px", backgroundColor: "var(--border)" }} />
-
-          {fetchError && (
-            <p style={{ color: "var(--primary)", fontSize: "0.875rem", padding: "0.5rem 0" }}>
-              이벤트를 불러오지 못했습니다. 다시 시도해주세요.
-            </p>
-          )}
-
-          {selectedEvents.length === 0 ? (
-            <div className="rounded-2xl py-16 flex flex-col items-center gap-3" style={{ border: "1px solid var(--border)", backgroundColor: "var(--card-bg)" }}>
-              <div className="text-4xl">📅</div>
-              <p className="text-base font-semibold" style={{ color: "var(--text)" }}>No events on this day</p>
-              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                {state !== "all" ? `No events in ${currentStateLabel} on this date.` : "Try selecting a different date or region."}
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {selectedEvents.map((ev) => (
-                <DayEventCard key={ev.id} event={ev} />
-              ))}
-            </div>
-          )}
-        </div>
+        <DayPopup
+          date={selected}
+          events={selectedEvents}
+          fetchError={fetchError}
+          onClose={() => { setSelected(null); setPopupRect(null); }}
+          currentStateLabel={currentStateLabel}
+          state={state}
+        />
       )}
     </div>
   );
