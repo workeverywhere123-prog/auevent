@@ -772,7 +772,7 @@ export default function MapPageClient({ events }: { events: Event[] }) {
       </div>
 
       {/* ── 우측 지도 ── */}
-      <div className="flex-1 relative" style={{ overflow: "hidden" }}>
+      <div className="flex-1 relative">
         <LeafletMap
           events={filtered}
           selectedEvent={selectedEvent}
