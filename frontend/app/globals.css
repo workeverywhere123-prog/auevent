@@ -24,6 +24,21 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Leaflet — Tailwind preflight이 position/display를 재설정하는 것을 방지 */
+.leaflet-pane,
+.leaflet-map-pane,
+.leaflet-tile-pane,
+.leaflet-tile-container,
+.leaflet-tile {
+  position: absolute !important;
+}
+.leaflet-tile {
+  display: block !important;
+}
+.leaflet-container {
+  overflow: hidden !important;
+}
+
 /* Leaflet 마커 기본 테두리/배경 제거 */
 .leaflet-div-icon,
 .leaflet-marker-icon {

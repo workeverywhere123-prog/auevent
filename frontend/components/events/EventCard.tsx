@@ -57,6 +57,8 @@ function ActionButtons({ website, ticketUrl }: { website?: string; ticketUrl?: s
 }
 
 export default function EventCard({ event, compact = false }: Props) {
+  const meta = CATEGORY_META[event.category];
+
   if (compact) {
     return (
       <div
@@ -115,14 +117,25 @@ export default function EventCard({ event, compact = false }: Props) {
 
   return (
     <div
-      className="rounded-xl overflow-hidden transition-shadow hover:shadow-md"
+      className="rounded-xl overflow-hidden transition-shadow hover:shadow-md flex flex-col"
       style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}
     >
-      <div
-        className="h-2 w-full"
-        style={{ backgroundColor: CATEGORY_META[event.category]?.color ?? "var(--primary)" }}
-      />
-      <div className="p-4 flex flex-col h-full">
+      {/* Image / Placeholder */}
+      <div className="relative h-40 w-full shrink-0 overflow-hidden">
+        {event.image ? (
+          <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
+        ) : (
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{ backgroundColor: meta.bg }}
+          >
+            <span className="text-5xl" style={{ opacity: 0.18 }}>🎪</span>
+          </div>
+        )}
+        <div className="absolute bottom-0 left-0 right-0 h-1.5" style={{ backgroundColor: meta.color }} />
+      </div>
+
+      <div className="p-4 flex flex-col flex-1">
         <div className="flex items-start justify-between gap-2 mb-2">
           <h3 className="font-semibold text-sm leading-snug flex-1" style={{ color: "var(--text)" }}>
             {event.title}
